@@ -1,0 +1,123 @@
+/* Spotlight for the element a tour step points at. Imported by features/tour. Respects reduced
+   motion; uses the ring token so it reads on light and dark surfaces. */
+.tour-spotlight {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+  scroll-margin-bottom: 9rem; /* keep it above the rail */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tour-spotlight {
+    animation: tour-pulse 1.6s ease-out 2;
+  }
+}
+
+@keyframes tour-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--ring) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 12px color-mix(in oklch, var(--ring) 0%, transparent);
+  }
+}
+
+/* The rail: a floating dark pill bar in the site's chrome (docs/design/igs-site-style.md). It
+   crosses every surface, light ops included, so its colors are the site's, not the theme's. */
+.tour-rail-bar {
+  background: rgb(23 23 23 / 0.94);
+  color: #f2f2f2;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 1.25rem;
+  box-shadow: 0 18px 48px -12px rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(12px);
+  font-family: var(--font-body);
+}
+@media (min-width: 640px) {
+  .tour-rail-bar {
+    border-radius: 9999px;
+  }
+}
+.tour-rail-steps {
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.05);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+.tour-rail-dot {
+  color: rgb(255 255 255 / 0.55);
+  transition:
+    background-color 160ms,
+    color 160ms;
+}
+.tour-rail-dot:hover {
+  color: #fff;
+}
+.tour-rail-dot.is-done {
+  color: #fff;
+  background: rgb(255 255 255 / 0.12);
+}
+.tour-rail-dot.is-current {
+  color: #171717;
+  background: #fff;
+}
+.tour-rail-title {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+.tour-rail-count {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #999;
+}
+.tour-rail-muted {
+  color: #999;
+}
+.tour-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2rem;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color 160ms,
+    color 160ms;
+}
+.tour-pill:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.tour-pill-primary {
+  background: #fff;
+  color: #171717;
+}
+.tour-pill-primary:hover {
+  background: #e6e6e6;
+}
+.tour-pill-secondary {
+  background: rgb(255 255 255 / 0.1);
+  color: rgb(255 255 255 / 0.7);
+}
+.tour-pill-secondary:hover,
+.tour-pill-ghost:hover {
+  color: #fff;
+}
+.tour-pill-ghost {
+  color: rgb(255 255 255 / 0.7);
+}
+.tour-rail :focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+/* The step heading takes focus programmatically for screen readers; no ring for that. */
+.tour-rail .tour-rail-title:focus-visible {
+  outline: none;
+}

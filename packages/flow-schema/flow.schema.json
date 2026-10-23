@@ -1,0 +1,888 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://igs-os.dev/schemas/flow/v1/flow.schema.json",
+  "title": "IGS OS flow definition",
+  "description": "A versioned directed graph of nodes started by one trigger. See docs/architecture/flow-engine.md. Structural rules that JSON Schema cannot express (unique ids, edge endpoints, valid ports per node type, reachability, expression syntax) are enforced by the publish-time validator.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "trigger", "entry", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "1" },
+    "id": { "$ref": "#/$defs/slug", "description": "Stable flow id, unique per tenant." },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "version": {
+      "description": "Assigned by the server on publish (1, 2, 3...). null while the definition is a draft.",
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "trigger": { "$ref": "#/$defs/trigger" },
+    "entry": { "$ref": "#/$defs/slug", "description": "Id of the first node executed after the trigger fires." },
+    "variables": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/variable" }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "maxItems": 400,
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "settings": { "$ref": "#/$defs/settings" }
+  },
+
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,62}$"
+    },
+    "template": {
+      "description": "A string that may contain {{ CEL expression }} placeholders. A string that is exactly one placeholder evaluates to the expression's typed value; otherwise placeholders are rendered and concatenated as text.",
+      "type": "string",
+      "maxLength": 20000
+    },
+    "expression": {
+      "description": "A CEL expression without the {{ }} delimiters. Must evaluate to the type the field documents.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "isoDuration": {
+      "description": "ISO 8601 duration, e.g. PT30S, PT15M, P2D.",
+      "type": "string",
+      "pattern": "^P(?!$)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$"
+    },
+    "valueMap": {
+      "description": "Named inputs; each value is a template (typed when it is a single placeholder) or a literal.",
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-zA-Z_][a-zA-Z0-9_]{0,62}$" },
+      "additionalProperties": true
+    },
+    "secretRef": {
+      "description": "Name of a secret in the tenant's secret store. Secrets are never readable from expressions.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,62}$"
+    },
+    "modelRef": {
+      "type": "object",
+      "required": ["role"],
+      "additionalProperties": false,
+      "description": "Provider-neutral model reference. The tenant's model registry maps each role to a concrete provider model id, so flows never hardcode vendor model names.",
+      "properties": {
+        "role": {
+          "enum": ["agent", "fast", "reasoning"],
+          "description": "agent = tool-using default; fast = cheap extraction/classification; reasoning = hardest planning tasks."
+        }
+      }
+    },
+    "jsonSchemaObject": {
+      "description": "An embedded JSON Schema (object type) describing structured data the node must produce or accept.",
+      "type": "object",
+      "required": ["type"],
+      "properties": { "type": { "const": "object" } }
+    },
+
+    "variable": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-zA-Z_][a-zA-Z0-9_]{0,62}$" },
+        "type": { "enum": ["string", "number", "integer", "boolean", "object", "array", "timestamp"] },
+        "default": {},
+        "description": { "type": "string", "maxLength": 500 },
+        "sensitive": {
+          "type": "boolean",
+          "default": false,
+          "description": "Redacted in execution logs and transcripts."
+        }
+      }
+    },
+
+    "edge": {
+      "type": "object",
+      "required": ["from", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "from": { "$ref": "#/$defs/slug", "description": "Source node id." },
+        "port": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,62}$",
+          "default": "next",
+          "description": "Output port of the source node. Valid ports depend on the node type (see the spec)."
+        },
+        "to": { "$ref": "#/$defs/slug", "description": "Target node id." }
+      }
+    },
+
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout": { "$ref": "#/$defs/isoDuration", "description": "Hard limit for the whole execution, including waits. Default P30D." },
+        "maxSteps": { "type": "integer", "minimum": 1, "maximum": 5000, "default": 500 },
+        "errorFlow": { "$ref": "#/$defs/slug", "description": "Flow started (latest published version) when an execution fails." },
+        "concurrency": {
+          "type": "object",
+          "required": ["key"],
+          "additionalProperties": false,
+          "properties": {
+            "key": { "$ref": "#/$defs/template", "description": "Executions with the same rendered key are serialized or rejected." },
+            "mode": { "enum": ["queue", "reject", "replace"], "default": "queue" }
+          }
+        },
+        "dedupe": {
+          "type": "object",
+          "required": ["key"],
+          "additionalProperties": false,
+          "properties": {
+            "key": { "$ref": "#/$defs/template", "description": "Trigger-level idempotency key; a second trigger with the same key within the window starts nothing." },
+            "window": { "$ref": "#/$defs/isoDuration", "default": "P1D" }
+          }
+        },
+        "conversation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "idleTimeout": { "$ref": "#/$defs/isoDuration", "default": "PT30M" },
+            "interrupts": {
+              "description": "Global intents checked on every user message before it reaches the waiting node (Voiceflow-style global intents).",
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "goTo"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "$ref": "#/$defs/slug" },
+                  "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+                  "examples": { "type": "array", "maxItems": 20, "items": { "type": "string" } },
+                  "goTo": { "$ref": "#/$defs/slug" },
+                  "resume": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "After the interrupt path reaches an end node, return to the node that was waiting."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "retention": { "$ref": "#/$defs/isoDuration", "description": "How long execution data is kept. Default P90D." }
+      }
+    },
+
+    "trigger": {
+      "type": "object",
+      "required": ["type"],
+      "properties": { "type": { "enum": ["manual", "chat", "webhook", "schedule", "event"] } },
+      "oneOf": [
+        { "$ref": "#/$defs/triggerManual" },
+        { "$ref": "#/$defs/triggerChat" },
+        { "$ref": "#/$defs/triggerWebhook" },
+        { "$ref": "#/$defs/triggerSchedule" },
+        { "$ref": "#/$defs/triggerEvent" }
+      ]
+    },
+    "triggerManual": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "manual" },
+        "input": { "$ref": "#/$defs/jsonSchemaObject" }
+      }
+    },
+    "triggerChat": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "chat" },
+        "channels": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["web", "whatsapp", "email"] },
+          "default": ["web"]
+        }
+      }
+    },
+    "triggerWebhook": {
+      "type": "object",
+      "required": ["type", "path", "auth"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "webhook" },
+        "path": { "$ref": "#/$defs/slug" },
+        "auth": {
+          "type": "object",
+          "required": ["mode"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["hmac", "bearer", "none"] },
+            "secret": { "$ref": "#/$defs/secretRef" }
+          }
+        },
+        "input": { "$ref": "#/$defs/jsonSchemaObject" },
+        "respond": {
+          "enum": ["immediately", "on_end"],
+          "default": "immediately",
+          "description": "immediately = 202 with the execution id; on_end = wait (max 30 s) and return the end node's output."
+        }
+      }
+    },
+    "triggerSchedule": {
+      "type": "object",
+      "required": ["type", "cron"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "schedule" },
+        "cron": { "type": "string", "minLength": 9, "maxLength": 120 },
+        "timezone": { "type": "string", "default": "America/Argentina/Buenos_Aires" }
+      }
+    },
+    "triggerEvent": {
+      "type": "object",
+      "required": ["type", "event"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "event" },
+        "event": {
+          "enum": [
+            "lead.created",
+            "lead.status_changed",
+            "trip.created",
+            "trip.status_changed",
+            "trip_item.status_changed",
+            "approval.decided",
+            "document.ingested"
+          ]
+        },
+        "filter": { "$ref": "#/$defs/expression", "description": "CEL boolean over `trigger`; the flow starts only when true." }
+      }
+    },
+
+    "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 20, "default": 3 },
+        "initialInterval": { "$ref": "#/$defs/isoDuration", "default": "PT1S" },
+        "backoffCoefficient": { "type": "number", "minimum": 1, "maximum": 10, "default": 2 },
+        "maxInterval": { "$ref": "#/$defs/isoDuration", "default": "PT1M" },
+        "nonRetryable": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["validation", "expression", "auth", "not_found", "conflict", "rate_limited", "timeout", "upstream", "refused"] },
+          "description": "Error classes that skip remaining attempts. validation and expression are always non-retryable."
+        }
+      }
+    },
+    "nodeBase": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "type": { "type": "string" },
+        "name": { "type": "string", "maxLength": 120 },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "disabled": { "type": "boolean", "default": false, "description": "Disabled nodes pass their input through the `next` port." },
+        "retry": { "$ref": "#/$defs/retry" },
+        "timeout": { "$ref": "#/$defs/isoDuration", "description": "Per-attempt timeout for the node's activity." },
+        "onError": {
+          "enum": ["fail", "continue", "branch"],
+          "default": "fail",
+          "description": "After retries are exhausted: fail the execution, continue through `next` with output {error}, or route to the `error` port."
+        },
+        "position": {
+          "type": "object",
+          "required": ["x", "y"],
+          "additionalProperties": false,
+          "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+        }
+      }
+    },
+
+    "node": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "type": {
+          "enum": [
+            "agent", "extract", "classify", "knowledge_search",
+            "say", "capture", "choice",
+            "condition", "switch", "set", "map", "subflow", "wait", "end",
+            "http", "action", "send_message", "emit_event",
+            "approval"
+          ]
+        }
+      },
+      "oneOf": [
+        { "$ref": "#/$defs/nodeAgent" },
+        { "$ref": "#/$defs/nodeExtract" },
+        { "$ref": "#/$defs/nodeClassify" },
+        { "$ref": "#/$defs/nodeKnowledgeSearch" },
+        { "$ref": "#/$defs/nodeSay" },
+        { "$ref": "#/$defs/nodeCapture" },
+        { "$ref": "#/$defs/nodeChoice" },
+        { "$ref": "#/$defs/nodeCondition" },
+        { "$ref": "#/$defs/nodeSwitch" },
+        { "$ref": "#/$defs/nodeSet" },
+        { "$ref": "#/$defs/nodeMap" },
+        { "$ref": "#/$defs/nodeSubflow" },
+        { "$ref": "#/$defs/nodeWait" },
+        { "$ref": "#/$defs/nodeEnd" },
+        { "$ref": "#/$defs/nodeHttp" },
+        { "$ref": "#/$defs/nodeAction" },
+        { "$ref": "#/$defs/nodeSendMessage" },
+        { "$ref": "#/$defs/nodeEmitEvent" },
+        { "$ref": "#/$defs/nodeApproval" }
+      ]
+    },
+
+    "nodeAgent": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "agent" },
+        "config": {
+          "type": "object",
+          "required": ["mode", "instructions"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": ["task", "conversation"],
+              "description": "task = one autonomous run on `input`; conversation = talks with the user across turns until `exit` is satisfied."
+            },
+            "instructions": { "$ref": "#/$defs/template" },
+            "input": { "$ref": "#/$defs/template", "description": "task mode: the work item handed to the agent." },
+            "tools": {
+              "type": "array",
+              "uniqueItems": true,
+              "maxItems": 30,
+              "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,62}$" },
+              "description": "Names from the tool registry (the same tools the MCP server exposes)."
+            },
+            "knowledgeBases": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+            "model": { "$ref": "#/$defs/modelRef", "default": { "role": "agent" } },
+            "effort": { "enum": ["low", "medium", "high"], "default": "medium", "description": "Provider-neutral reasoning effort; the LLM layer maps it to the provider setting." },
+            "maxIterations": { "type": "integer", "minimum": 1, "maximum": 50, "default": 12 },
+            "output": { "$ref": "#/$defs/jsonSchemaObject", "description": "task mode: structured result the agent must return." },
+            "exit": {
+              "type": "object",
+              "required": ["output"],
+              "additionalProperties": false,
+              "description": "conversation mode: the agent leaves through `completed` once it can fill `output`.",
+              "properties": {
+                "description": { "type": "string", "maxLength": 1000 },
+                "output": { "$ref": "#/$defs/jsonSchemaObject" },
+                "maxTurns": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
+                "handoffWhen": { "type": "string", "maxLength": 1000, "description": "When the agent should leave through `handoff` (e.g. the user asks for a human)." }
+              }
+            },
+            "approvalRequiredFor": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,62}$" },
+              "description": "Tools whose calls pause for human approval before running."
+            }
+          },
+          "allOf": [
+            { "if": { "properties": { "mode": { "const": "task" } } }, "then": { "required": ["input"], "not": { "required": ["exit"] } } },
+            { "if": { "properties": { "mode": { "const": "conversation" } } }, "then": { "required": ["exit"], "not": { "required": ["input"] } } }
+          ]
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeExtract": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "extract" },
+        "config": {
+          "type": "object",
+          "required": ["input", "schema"],
+          "additionalProperties": false,
+          "properties": {
+            "input": { "$ref": "#/$defs/template" },
+            "instructions": { "$ref": "#/$defs/template" },
+            "schema": { "$ref": "#/$defs/jsonSchemaObject" },
+            "model": { "$ref": "#/$defs/modelRef", "default": { "role": "fast" } }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeClassify": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "classify" },
+        "config": {
+          "type": "object",
+          "required": ["input", "classes"],
+          "additionalProperties": false,
+          "properties": {
+            "input": { "$ref": "#/$defs/template" },
+            "instructions": { "$ref": "#/$defs/template" },
+            "classes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "required": ["id", "description"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "$ref": "#/$defs/slug" },
+                  "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+                  "examples": { "type": "array", "maxItems": 20, "items": { "type": "string" } }
+                }
+              }
+            },
+            "model": { "$ref": "#/$defs/modelRef", "default": { "role": "fast" } }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeKnowledgeSearch": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "knowledge_search" },
+        "config": {
+          "type": "object",
+          "required": ["query", "knowledgeBases"],
+          "additionalProperties": false,
+          "properties": {
+            "query": { "$ref": "#/$defs/template" },
+            "knowledgeBases": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+            "topK": { "type": "integer", "minimum": 1, "maximum": 50, "default": 5 },
+            "filters": { "$ref": "#/$defs/valueMap", "description": "Payload filters, e.g. {\"country\": \"{{ vars.country }}\"}." },
+            "rerank": { "type": "boolean", "default": true },
+            "minScore": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeSay": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "say" },
+        "config": {
+          "type": "object",
+          "required": ["text"],
+          "additionalProperties": false,
+          "properties": {
+            "text": { "$ref": "#/$defs/template" },
+            "variants": {
+              "type": "array",
+              "maxItems": 10,
+              "items": { "$ref": "#/$defs/template" },
+              "description": "Alternative phrasings; one is picked deterministically per execution."
+            },
+            "attachments": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "required": ["kind", "url"],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": { "enum": ["link", "image", "file"] },
+                  "url": { "$ref": "#/$defs/template" },
+                  "title": { "$ref": "#/$defs/template" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeCapture": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "capture" },
+        "config": {
+          "type": "object",
+          "required": ["variable"],
+          "additionalProperties": false,
+          "properties": {
+            "prompt": { "$ref": "#/$defs/template", "description": "Optional message sent before waiting (saves a separate say node)." },
+            "variable": { "type": "string", "pattern": "^[a-zA-Z_][a-zA-Z0-9_]{0,62}$" },
+            "extract": {
+              "$ref": "#/$defs/jsonSchemaObject",
+              "description": "If set, the reply is parsed into this structure (LLM-backed slot filling); missing required fields re-prompt."
+            },
+            "reprompt": { "$ref": "#/$defs/template" },
+            "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 5, "default": 2 },
+            "waitFor": { "$ref": "#/$defs/isoDuration", "default": "PT30M" }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeChoice": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "choice" },
+        "config": {
+          "type": "object",
+          "required": ["prompt", "options"],
+          "additionalProperties": false,
+          "properties": {
+            "prompt": { "$ref": "#/$defs/template" },
+            "options": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "required": ["id", "label"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "$ref": "#/$defs/slug" },
+                  "label": { "$ref": "#/$defs/template" },
+                  "synonyms": { "type": "array", "maxItems": 20, "items": { "type": "string" } }
+                }
+              }
+            },
+            "freeText": {
+              "enum": ["classify", "no_match"],
+              "default": "classify",
+              "description": "classify = map free text to an option with an LLM; no_match = route to the no_match port."
+            },
+            "waitFor": { "$ref": "#/$defs/isoDuration", "default": "PT30M" }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeCondition": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "condition" },
+        "config": {
+          "type": "object",
+          "required": ["expression"],
+          "additionalProperties": false,
+          "properties": { "expression": { "$ref": "#/$defs/expression" } }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeSwitch": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "switch" },
+        "config": {
+          "type": "object",
+          "required": ["cases"],
+          "additionalProperties": false,
+          "properties": {
+            "cases": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "required": ["id", "expression"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "$ref": "#/$defs/slug" },
+                  "expression": { "$ref": "#/$defs/expression" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeSet": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "set" },
+        "config": {
+          "type": "object",
+          "required": ["assign"],
+          "additionalProperties": false,
+          "properties": { "assign": { "$ref": "#/$defs/valueMap", "minProperties": 1 } }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeMap": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "map" },
+        "config": {
+          "type": "object",
+          "required": ["items", "flow"],
+          "additionalProperties": false,
+          "properties": {
+            "items": { "$ref": "#/$defs/template", "description": "Must evaluate to a list (max 1000 items)." },
+            "flow": { "$ref": "#/$defs/slug", "description": "Sub-flow run once per item (child execution)." },
+            "version": {
+              "oneOf": [{ "const": "published" }, { "type": "integer", "minimum": 1 }],
+              "default": "published",
+              "description": "`published` is resolved to a number when the parent execution starts."
+            },
+            "itemInput": { "type": "string", "pattern": "^[a-zA-Z_][a-zA-Z0-9_]{0,62}$", "default": "item" },
+            "inputs": { "$ref": "#/$defs/valueMap" },
+            "concurrency": { "type": "integer", "minimum": 1, "maximum": 20, "default": 5 },
+            "failFast": { "type": "boolean", "default": false }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeSubflow": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "subflow" },
+        "config": {
+          "type": "object",
+          "required": ["flow"],
+          "additionalProperties": false,
+          "properties": {
+            "flow": { "$ref": "#/$defs/slug" },
+            "version": {
+              "oneOf": [{ "const": "published" }, { "type": "integer", "minimum": 1 }],
+              "default": "published"
+            },
+            "inputs": { "$ref": "#/$defs/valueMap" },
+            "wait": { "type": "boolean", "default": true, "description": "false = fire and forget (output is the child execution id)." }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeWait": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "wait" },
+        "config": {
+          "type": "object",
+          "required": ["mode"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["duration", "until"] },
+            "duration": { "$ref": "#/$defs/isoDuration" },
+            "until": { "$ref": "#/$defs/template", "description": "Must evaluate to a timestamp. A time in the past continues immediately." }
+          },
+          "allOf": [
+            { "if": { "properties": { "mode": { "const": "duration" } } }, "then": { "required": ["duration"] } },
+            { "if": { "properties": { "mode": { "const": "until" } } }, "then": { "required": ["until"] } }
+          ]
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeEnd": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "end" },
+        "config": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "enum": ["completed", "failed"], "default": "completed" },
+            "output": { "$ref": "#/$defs/valueMap" },
+            "reason": { "$ref": "#/$defs/template" }
+          }
+        }
+      }
+    },
+
+    "nodeHttp": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "http" },
+        "config": {
+          "type": "object",
+          "required": ["method", "url"],
+          "additionalProperties": false,
+          "properties": {
+            "method": { "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+            "url": { "$ref": "#/$defs/template", "description": "Host must be in the tenant egress allowlist." },
+            "headers": { "$ref": "#/$defs/valueMap" },
+            "query": { "$ref": "#/$defs/valueMap" },
+            "body": { "description": "Template string, or an object whose string leaves are templates." },
+            "auth": {
+              "type": "object",
+              "required": ["mode", "secret"],
+              "additionalProperties": false,
+              "properties": {
+                "mode": { "enum": ["bearer", "basic", "header", "hmac"] },
+                "secret": { "$ref": "#/$defs/secretRef" },
+                "header": { "type": "string", "maxLength": 100 }
+              }
+            },
+            "successStatus": {
+              "type": "array",
+              "items": { "type": "integer", "minimum": 100, "maximum": 599 },
+              "default": [200, 201, 202, 204]
+            },
+            "sendIdempotencyKey": { "type": "boolean", "default": true, "description": "Adds Idempotency-Key: <execution>:<node>:<iteration> to non-GET requests." }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeAction": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "action" },
+        "config": {
+          "type": "object",
+          "required": ["action"],
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "description": "Domain action from the action registry. Inputs are validated against the action's own schema at publish time.",
+              "enum": [
+                "create_lead",
+                "update_lead_status",
+                "draft_trip",
+                "get_trip",
+                "list_trip_items",
+                "update_trip_item",
+                "swap_opponent",
+                "set_trip_status",
+                "request_provider_confirmations",
+                "send_proposal",
+                "create_ops_task",
+                "check_trip_readiness"
+              ]
+            },
+            "inputs": { "$ref": "#/$defs/valueMap" }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeSendMessage": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "send_message" },
+        "config": {
+          "type": "object",
+          "required": ["channel", "to", "body"],
+          "additionalProperties": false,
+          "properties": {
+            "channel": { "enum": ["email", "chat", "ops_inbox", "whatsapp"] },
+            "to": { "$ref": "#/$defs/template" },
+            "subject": { "$ref": "#/$defs/template" },
+            "body": { "$ref": "#/$defs/template" },
+            "attachments": {
+              "type": "array",
+              "maxItems": 10,
+              "items": { "$ref": "#/$defs/template" }
+            }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeEmitEvent": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "emit_event" },
+        "config": {
+          "type": "object",
+          "required": ["event"],
+          "additionalProperties": false,
+          "properties": {
+            "event": { "type": "string", "pattern": "^custom\\.[a-z][a-z0-9_.]{0,62}$", "description": "Flows may only emit custom.* events; domain events come from the domain layer." },
+            "payload": { "$ref": "#/$defs/valueMap" }
+          }
+        }
+      },
+      "required": ["config"]
+    },
+
+    "nodeApproval": {
+      "allOf": [{ "$ref": "#/$defs/nodeBase" }],
+      "unevaluatedProperties": false,
+      "properties": {
+        "type": { "const": "approval" },
+        "config": {
+          "type": "object",
+          "required": ["title", "assignees", "expiresAfter"],
+          "additionalProperties": false,
+          "properties": {
+            "title": { "$ref": "#/$defs/template" },
+            "description": { "$ref": "#/$defs/template" },
+            "links": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "required": ["label", "url"],
+                "additionalProperties": false,
+                "properties": { "label": { "type": "string" }, "url": { "$ref": "#/$defs/template" } }
+              }
+            },
+            "assignees": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": false,
+              "properties": {
+                "roles": { "type": "array", "uniqueItems": true, "items": { "enum": ["ops", "sales", "admin"] } },
+                "users": { "type": "array", "uniqueItems": true, "items": { "type": "string", "format": "email" } }
+              }
+            },
+            "form": { "$ref": "#/$defs/jsonSchemaObject", "description": "Extra fields the approver fills (e.g. a discount, a comment)." },
+            "expiresAfter": { "$ref": "#/$defs/isoDuration" },
+            "remindEvery": { "$ref": "#/$defs/isoDuration" }
+          }
+        }
+      },
+      "required": ["config"]
+    }
+  }
+}

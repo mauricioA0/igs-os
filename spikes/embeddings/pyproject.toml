@@ -1,0 +1,14 @@
+[project]
+name = "embeddings-bakeoff"
+version = "0.1.0"
+description = "Mini bake-off of embedding models on the IGS OS demo corpus"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "sentence-transformers>=5",
+  "torch",
+  "FlagEmbedding",
+  "numpy",
+]
+
+[tool.uv]
+package = false

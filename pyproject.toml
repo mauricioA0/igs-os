@@ -1,0 +1,43 @@
+[project]
+name = "igs-os"
+version = "0.0.0"
+requires-python = ">=3.13,<3.14"
+
+[tool.uv.workspace]
+members = ["packages/py-common", "services/core", "services/worker"]
+
+[tool.uv.sources]
+igs-common = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.7",
+    "pyright>=1.1.390",
+    "datamodel-code-generator>=0.86.0",
+]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["spikes"]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S"]
+ignore = ["S101"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages/py-common/tests", "services/core/tests", "services/worker/tests"]
+addopts = ["--import-mode=importlib"]
+pythonpath = ["services/core/tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+
+[tool.ruff.lint.isort]
+known-first-party = ["igs_common", "igs_core", "igs_worker"]
+
+[tool.pyright]
+include = ["packages/py-common", "services/core", "services/worker"]
+exclude = ["spikes", "**/.venv", "**/node_modules", "apps"]
+pythonVersion = "3.13"

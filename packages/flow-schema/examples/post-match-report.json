@@ -1,0 +1,99 @@
+{
+  "$schema": "../flow.schema.json",
+  "schemaVersion": "1",
+  "id": "post-match-report",
+  "name": "Post-match report",
+  "description": "When a match is marked completed, an agent writes a short report from the tour leader's notes and the opponent profile, and it is emailed to the coach.",
+  "version": null,
+  "trigger": {
+    "type": "event",
+    "event": "trip_item.status_changed",
+    "filter": "trigger.item.kind == 'match' && trigger.item.status == 'confirmed' && has(trigger.item.result)"
+  },
+  "entry": "load_trip",
+  "nodes": [
+    {
+      "id": "load_trip",
+      "type": "action",
+      "config": { "action": "get_trip", "inputs": { "tripId": "{{ trigger.item.tripId }}" } },
+      "retry": { "maxAttempts": 5 },
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "opponent_context",
+      "type": "knowledge_search",
+      "config": {
+        "query": "Scouting profile and playing style of {{ trigger.item.opponentName }}",
+        "knowledgeBases": ["opponents"],
+        "topK": 3,
+        "filters": { "country": "{{ nodes.load_trip.output.country }}" }
+      },
+      "onError": "continue",
+      "position": { "x": 0, "y": 120 }
+    },
+    {
+      "id": "write_report",
+      "type": "agent",
+      "config": {
+        "mode": "task",
+        "instructions": "You write post-match reports for visiting US college and club coaches. Be specific, encouraging and honest. Use only the tour leader's notes and the opponent context; do not invent statistics. 150-250 words, English.",
+        "input": "Trip: {{ nodes.load_trip.output.title }}\nTeam: {{ nodes.load_trip.output.lead.organization }} ({{ nodes.load_trip.output.lead.ageGroup }}, level {{ string(nodes.load_trip.output.lead.levelScore) }})\nMatch: {{ trigger.item.title }} — day {{ string(trigger.item.day) }}\nResult: {{ trigger.item.result }}\nTour leader notes: {{ has(trigger.item.notes) ? trigger.item.notes : 'none' }}\nOpponent context: {{ has(nodes.opponent_context.output.hits) ? nodes.opponent_context.output.hits.map(h, h.content).join('\\n') : 'not available' }}",
+        "model": { "role": "agent" },
+        "effort": "low",
+        "output": {
+          "type": "object",
+          "required": ["subject", "body"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "maxLength": 120 },
+            "body": { "type": "string", "maxLength": 4000 }
+          }
+        }
+      },
+      "retry": { "maxAttempts": 3, "nonRetryable": ["refused"] },
+      "position": { "x": 0, "y": 240 }
+    },
+    {
+      "id": "email_coach",
+      "type": "send_message",
+      "config": {
+        "channel": "email",
+        "to": "{{ nodes.load_trip.output.lead.email }}",
+        "subject": "{{ nodes.write_report.output.subject }}",
+        "body": "{{ nodes.write_report.output.body }}"
+      },
+      "retry": { "maxAttempts": 6, "initialInterval": "PT30S", "maxInterval": "PT10M" },
+      "onError": "branch",
+      "position": { "x": 0, "y": 360 }
+    },
+    {
+      "id": "email_failed",
+      "type": "action",
+      "config": {
+        "action": "create_ops_task",
+        "inputs": {
+          "title": "Post-match report could not be emailed for {{ nodes.load_trip.output.title }}",
+          "tripId": "{{ trigger.item.tripId }}",
+          "draft": "{{ nodes.write_report.output.body }}",
+          "error": "{{ nodes.email_coach.error.message }}"
+        }
+      },
+      "position": { "x": 260, "y": 360 }
+    },
+    { "id": "sent", "type": "end", "position": { "x": 0, "y": 480 } },
+    { "id": "handed_to_ops", "type": "end", "config": { "reason": "Email failed; ops task created" }, "position": { "x": 260, "y": 480 } }
+  ],
+  "edges": [
+    { "from": "load_trip", "to": "opponent_context" },
+    { "from": "opponent_context", "to": "write_report" },
+    { "from": "write_report", "to": "email_coach" },
+    { "from": "email_coach", "to": "sent" },
+    { "from": "email_coach", "port": "error", "to": "email_failed" },
+    { "from": "email_failed", "to": "handed_to_ops" }
+  ],
+  "settings": {
+    "timeout": "PT2H",
+    "dedupe": { "key": "{{ trigger.item.id }}", "window": "P30D" },
+    "errorFlow": "notify-ops-on-failure"
+  }
+}

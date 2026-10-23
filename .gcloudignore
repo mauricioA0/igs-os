@@ -1,0 +1,12 @@
+# Upload context for `gcloud builds submit` (scripts/deploy/cloudbuild.yaml). Mirrors .gitignore
+# and drops the heavy local-only trees: dependencies, venvs, build output, model weights.
+#!include:.gitignore
+.git/
+**/node_modules/
+**/.venv/
+**/.next/
+apps/
+spikes/
+loadtest/
+services/models/models/
+infra/terraform/**/.terraform/

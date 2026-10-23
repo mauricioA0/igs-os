@@ -1,0 +1,194 @@
+# Pre-departure entry requirements for US passport holders, by destination.
+# Research and sources: docs/ops/requisitos-viaje.md (checked 2026-10-23). Re-check every quarter.
+# A new file (e.g. 2027-01.yaml) supersedes this one; `load_rules()` picks the latest version.
+#
+# severity: blocker      → the traveler cannot board or enter without it (law / airline)
+#           required     → law with uncertain enforcement, or IGS policy; still blocks "ready"
+#           recommended  → warning only, never blocks readiness
+# when:     minor (bool)            under 18 on the departure date
+#           max_age (int)           possibly this age or younger on the departure date
+# effective_from: null              the rule is known but not in force yet (e.g. ETIAS)
+
+version: "2026-10"
+checked_on: "2026-10-23"
+nationality: US
+
+sources:
+  br-mre-sf:
+    title: Consulado-Geral do Brasil em São Francisco — Electronic Visitor Visa (e-Visa)
+    url: https://www.gov.br/mre/pt-br/consulado-sao-francisco/electronic-visitor-visa-e-visa
+    official: true
+  br-usembassy-minors:
+    title: U.S. Embassy & Consulates in Brazil — Minors traveling
+    url: https://br.usembassy.gov/minors-traveling/
+    official: true
+  br-cnj-131:
+    title: CNJ — Viagem ao exterior (Resolução 131/2011)
+    url: https://www.cnj.jus.br/programas-e-acoes/viagem-ao-exterior/
+    official: true
+  ar-migraciones-minors:
+    title: Migraciones (argentina.gob.ar) — ingreso de menores de 13 años
+    url: https://www.argentina.gob.ar/node/160885
+    official: true
+  ar-dnu-366-2025:
+    title: DNU 366/2025 — seguro de salud obligatorio para extranjeros (aplicación gradual)
+    url: https://www.globalrescue.com/es/common/blog/detail/argentina-requires-travel-medical-insurance-guide/
+    official: false
+  cr-entry:
+    title: Costa Rica entry requirements (secondary sources disagree on passport validity)
+    url: https://www.costaricavibes.com/costa-rica-entry-requirements/
+    official: false
+  cr-embassy-minors:
+    title: Embajada de Costa Rica — permiso de salida de menores (residentes)
+    url: https://www.embajadadecostarica.org/wp-content/uploads/2025/02/Permiso-de-salida-de-menores-1-E2025.pdf
+    official: true
+  es-consulate-dc:
+    title: Consulado General de España en Washington — Conditions for entry into Spain
+    url: https://www.exteriores.gob.es/Consulados/washington/en/ServiciosConsulares/Paginas/Consular/Condiciones-de-entrada-en-Espana.aspx
+    official: true
+  eu-ees:
+    title: EEAS — New Entry/Exit System (fully operational 10 April 2026)
+    url: https://eeas.europa.eu/delegations/thailand/travelling-europe-new-entryexit-system_en
+    official: true
+  eu-etias:
+    title: ETIAS — not in operation; start date to be announced months ahead
+    url: https://government.nl/topics/holidays-and-travels/etias
+    official: true
+  igs-policy:
+    title: IGS operator policy (stricter than the law on purpose)
+    url: docs/ops/requisitos-viaje.md
+    official: false
+
+requirements:
+  passport:
+    label: Passport valid for the trip
+    kind: passport
+    due_days_before: 75
+    hint: US routine renewal takes 4–6 weeks; Brazil's e-Visa needs the new passport.
+  br_evisa:
+    label: Brazil e-Visa
+    kind: document
+    due_days_before: 60
+    hint: Apply only at brazil.vfsevisa.com (US$ 80.90). Minors need the birth certificate and both parents' authorization.
+  birth_certificate:
+    label: Birth certificate copy
+    kind: document
+    due_days_before: 60
+    hint: Needed for a minor's Brazil e-Visa; proves the parent–child link at the border.
+  parental_consent:
+    label: Notarized consent from both parents naming the group adult
+    kind: document
+    due_days_before: 30
+    hint: Mark "not applicable" when both parents travel with the minor.
+  travel_insurance:
+    label: Medical insurance with emergency coverage
+    kind: document
+    due_days_before: 14
+    hint: Must cover the whole stay (medical, hospitalization, evacuation, repatriation).
+  emergency_contact:
+    label: Emergency contact and medical notes on file
+    kind: document
+    due_days_before: 21
+    hint: Status only — the content lives with the tour leader, not in IGS OS.
+  schengen_funds:
+    label: Proof of funds for Schengen (€122/day, min €1,099 for 9+ days)
+    kind: document
+    due_days_before: 14
+    hint: Cash, credit card with statement or bank passbook; bank letters are not accepted.
+  etias:
+    label: ETIAS travel authorization
+    kind: document
+    due_days_before: 30
+    hint: Not in operation yet. Set effective_from when the EU announces the date.
+
+defaults:
+  # Applies to every destination on top of its own list.
+  requirements:
+    - key: passport
+      severity: blocker
+      sources: [igs-policy]
+    - key: travel_insurance
+      severity: required
+      sources: [igs-policy]
+    - key: emergency_contact
+      severity: required
+      sources: [igs-policy]
+    - key: parental_consent
+      when: { minor: true }
+      severity: required
+      sources: [igs-policy]
+  passport:
+    valid_through: trip_end
+    months_after: 0
+    recommended_months_after_return: 6
+
+destinations:
+  - code: AR
+    names: [Argentina]
+    passport:
+      valid_through: trip_end
+      months_after: 0
+    requirements:
+      - key: travel_insurance
+        severity: required
+        sources: [ar-dnu-366-2025]
+        note: DNU 366/2025 requires it for every foreigner; enforcement at the border is gradual.
+      - key: parental_consent
+        when: { minor: true, max_age: 12 }
+        severity: blocker
+        sources: [ar-migraciones-minors]
+        note: Under 13 and not travelling with whoever holds parental responsibility needs entry authorization naming an authorized third party.
+
+  - code: BR
+    names: [Brazil, Brasil]
+    passport:
+      valid_through: trip_end
+      months_after: 0
+      blank_pages: 2
+    requirements:
+      - key: br_evisa
+        severity: blocker
+        sources: [br-mre-sf]
+        note: Required for US citizens since 2025-04-10; airlines check it at boarding.
+      - key: birth_certificate
+        when: { minor: true }
+        severity: blocker
+        sources: [br-mre-sf]
+        note: Part of a minor's e-Visa application.
+      - key: parental_consent
+        when: { minor: true }
+        severity: blocker
+        sources: [br-mre-sf, br-usembassy-minors]
+        note: The minor's e-Visa needs both parents' signed authorization; Federal Police have delayed minors without it.
+
+  - code: CR
+    names: [Costa Rica]
+    passport:
+      valid_through: trip_end
+      months_after: 0
+    requirements:
+      - key: parental_consent
+        when: { minor: true }
+        severity: required
+        sources: [cr-embassy-minors, igs-policy]
+        note: Exit permits are for Costa Rican/resident minors; for visiting minors a notarized letter is advised.
+
+  - code: ES
+    names: [Spain, España]
+    passport:
+      valid_through: trip_end
+      months_after: 3
+      max_issued_years: 10
+    requirements:
+      - key: passport
+        severity: blocker
+        sources: [es-consulate-dc]
+        note: Valid 3 months after leaving Schengen and issued within the last 10 years.
+      - key: schengen_funds
+        severity: required
+        sources: [es-consulate-dc]
+      - key: etias
+        severity: blocker
+        sources: [eu-etias]
+        effective_from: null
+        note: Not in operation as of 2026-10-23. EES biometrics apply at entry since 2026-04-10 (allow extra time).

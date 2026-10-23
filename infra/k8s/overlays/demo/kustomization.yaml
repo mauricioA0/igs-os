@@ -1,0 +1,50 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Demo (mv-cloud-509914): Spot capacity, workers scale to zero when idle, no Temporal UI ingress
+# (no DNS name; reach the UI with `kubectl -n temporal port-forward svc/temporal-web 8080`).
+resources:
+  - ../../base
+images:
+  # base already rewrote `igs-worker` to the generic repo; retarget that name.
+  - name: us-central1-docker.pkg.dev/mv-cloud-509914/igs/worker
+    newName: us-central1-docker.pkg.dev/mv-cloud-509914/igs-demo/igs-worker
+    newTag: latest # the pipeline pins the git SHA
+patches:
+  - target: { kind: Deployment, namespace: igs-workers }
+    patch: |-
+      - op: add
+        path: /spec/template/spec/nodeSelector
+        value: { cloud.google.com/gke-spot: "true" }
+      - op: replace
+        path: /spec/template/spec/terminationGracePeriodSeconds
+        value: 25
+  # Terraform outputs for envs/demo (private IPs/URLs, not secrets).
+  - target: { kind: ConfigMap, name: temporal-db }
+    patch: |-
+      - op: replace
+        path: /data/host
+        value: 10.103.0.3
+  - target: { kind: ConfigMap, name: igs-worker }
+    patch: |-
+      - op: replace
+        path: /data/IGS_MODELS_URL
+        value: https://igs-demo-models-fujfenyt5a-uc.a.run.app
+  # No public Temporal UI in the demo.
+  - target: { kind: Ingress, name: temporal-ui }
+    patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata: { name: temporal-ui, namespace: temporal }
+  - target: { kind: ManagedCertificate, name: temporal-ui }
+    patch: |-
+      $patch: delete
+      apiVersion: networking.gke.io/v1
+      kind: ManagedCertificate
+      metadata: { name: temporal-ui, namespace: temporal }
+  - target: { kind: FrontendConfig, name: temporal-ui-https }
+    patch: |-
+      $patch: delete
+      apiVersion: networking.gke.io/v1beta1
+      kind: FrontendConfig
+      metadata: { name: temporal-ui-https, namespace: temporal }

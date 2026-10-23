@@ -1,0 +1,474 @@
+# Demo catalog — ported from apps/web/src/app/(prototype)/_mock/catalog.ts.
+# Clubs, providers and prices are fictional; stadiums and cities are real places.
+# `key` is the stable fixture id (seed derives a deterministic UUID from it).
+providers:
+  - key: hotel-palermo
+    name: Palermo Sports Hotel
+    kind: hotel
+    city: Buenos Aires
+    country: Argentina
+    contact: reservas@palermosports.example
+    unit_price_usd: 85
+    unit: person/night
+  - key: bus-ba
+    name: Transportes Río de la Plata
+    kind: transport
+    city: Buenos Aires
+    country: Argentina
+    contact: +54 11 5555-0101
+    unit_price_usd: 30
+    unit: person/day
+  - key: ref-ba
+    name: Árbitros AFA Certificados
+    kind: referee
+    city: Buenos Aires
+    country: Argentina
+    contact: +54 11 5555-0102
+    unit_price_usd: 6
+    unit: person/match
+  - key: guide-ba
+    name: Tango & Fútbol Guides
+    kind: guide
+    city: Buenos Aires
+    country: Argentina
+    contact: hola@tangofutbol.example
+    unit_price_usd: 25
+    unit: person/day
+  - key: hotel-rio
+    name: Barra Athletes Inn
+    kind: hotel
+    city: Rio de Janeiro
+    country: Brazil
+    contact: booking@barraathletes.example
+    unit_price_usd: 95
+    unit: person/night
+  - key: bus-rio
+    name: Carioca Team Transfers
+    kind: transport
+    city: Rio de Janeiro
+    country: Brazil
+    contact: +55 21 5555-0201
+    unit_price_usd: 35
+    unit: person/day
+  - key: hotel-cr
+    name: Pura Vida Team Lodge
+    kind: hotel
+    city: San José
+    country: Costa Rica
+    contact: stay@puravidalodge.example
+    unit_price_usd: 75
+    unit: person/night
+  - key: bus-cr
+    name: Tico Shuttle Co.
+    kind: transport
+    city: San José
+    country: Costa Rica
+    contact: +506 5555-0301
+    unit_price_usd: 28
+    unit: person/day
+  - key: venue-ba
+    name: Complejo Deportivo Costanera
+    kind: venue
+    city: Buenos Aires
+    country: Argentina
+    contact: canchas@costanera.example
+    unit_price_usd: 12
+    unit: person/session
+opponents:
+  - key: academia-palermo-fc
+    name: Academia Palermo FC
+    city: Buenos Aires
+    country: Argentina
+    sport: soccer
+    gender: men
+    age_groups:
+      - U15
+      - U17
+      - U19
+    level_score: 8
+    description: Pre-professional academy feeding Primera División clubs. High-tempo pressing, very technical
+      midfielders. Best for elite club teams and strong college programs.
+  - key: club-social-villa-urquiza
+    name: Club Social Villa Urquiza
+    city: Buenos Aires
+    country: Argentina
+    sport: soccer
+    gender: men
+    age_groups:
+      - U15
+      - U17
+      - U19
+      - college
+    level_score: 6
+    description: Traditional neighborhood club with a competitive amateur first team. Physical, direct
+      play. Good match for D2/D3 college programs.
+  - key: liga-universitaria-uba-select
+    name: Liga Universitaria UBA Select
+    city: Buenos Aires
+    country: Argentina
+    sport: soccer
+    gender: men
+    age_groups:
+      - college
+    level_score: 5
+    description: University all-star selection. Friendly cultural exchange atmosphere, post-match asado
+      with players.
+  - key: deportivo-belgrano-femenino
+    name: Deportivo Belgrano Femenino
+    city: Buenos Aires
+    country: Argentina
+    sport: soccer
+    gender: women
+    age_groups:
+      - U17
+      - U19
+      - college
+    level_score: 7
+    description: Women's first team plays in the top amateur league; several players capped at youth national
+      level. Quick wingers, strong set pieces.
+  - key: escuela-de-futbol-femenino-sur
+    name: Escuela de Fútbol Femenino Sur
+    city: Buenos Aires
+    country: Argentina
+    sport: soccer
+    gender: women
+    age_groups:
+      - U15
+      - U17
+    level_score: 5
+    description: Grassroots women's program in the south of the city. Ideal for youth club teams wanting
+      a competitive but friendly game.
+  - key: club-atletico-nunez-juveniles
+    name: Club Atlético Núñez Juveniles
+    city: Buenos Aires
+    country: Argentina
+    sport: soccer
+    gender: men
+    age_groups:
+      - U13
+      - U15
+    level_score: 6
+    description: Youth divisions with a strong possession philosophy. Great for younger elite club teams.
+  - key: san-isidro-rugby-club-juveniles
+    name: San Isidro Rugby Club Juveniles
+    city: Buenos Aires
+    country: Argentina
+    sport: rugby
+    gender: men
+    age_groups:
+      - U17
+      - U19
+    level_score: 8
+    description: Historic rugby culture of the northern suburbs. Strong forwards, demanding contact game.
+  - key: hockey-club-olivos
+    name: Hockey Club Olivos
+    city: Buenos Aires
+    country: Argentina
+    sport: field_hockey
+    gender: women
+    age_groups:
+      - U17
+      - U19
+      - college
+    level_score: 7
+    description: Field hockey club in the home of Las Leonas tradition. Synthetic water-based turf.
+  - key: voleibol-club-caballito
+    name: Voleibol Club Caballito
+    city: Buenos Aires
+    country: Argentina
+    sport: volleyball
+    gender: women
+    age_groups:
+      - U17
+      - U19
+      - college
+    level_score: 6
+    description: Indoor volleyball club competing in the metropolitan league.
+  - key: basquet-club-villa-crespo
+    name: Básquet Club Villa Crespo
+    city: Buenos Aires
+    country: Argentina
+    sport: basketball
+    gender: men
+    age_groups:
+      - U17
+      - U19
+      - college
+    level_score: 6
+    description: Gritty indoor basketball culture; plays in the Buenos Aires federation league.
+  - key: escolinha-barra-fc
+    name: Escolinha Barra FC
+    city: Rio de Janeiro
+    country: Brazil
+    sport: soccer
+    gender: men
+    age_groups:
+      - U15
+      - U17
+    level_score: 7
+    description: Brazilian youth academy with futsal-trained, creative players. Skill-heavy, fast combinations.
+  - key: carioca-universitario
+    name: Carioca Universitário
+    city: Rio de Janeiro
+    country: Brazil
+    sport: soccer
+    gender: men
+    age_groups:
+      - college
+    level_score: 5
+    description: University team from Rio; relaxed, friendly exchange, games on natural grass by the coast.
+  - key: meninas-do-rio-fc
+    name: Meninas do Rio FC
+    city: Rio de Janeiro
+    country: Brazil
+    sport: soccer
+    gender: women
+    age_groups:
+      - U17
+      - U19
+      - college
+    level_score: 7
+    description: Women's club with players who trained around the 2027 Women's World Cup host-city programs.
+      Technical and physical.
+  - key: saprissa-fuerza-juvenil
+    name: Saprissa Fuerza Juvenil
+    city: San José
+    country: Costa Rica
+    sport: soccer
+    gender: men
+    age_groups:
+      - U15
+      - U17
+      - U19
+    level_score: 7
+    description: Costa Rican youth setup with a well-organized defensive style.
+  - key: liga-tica-femenina-select
+    name: Liga Tica Femenina Select
+    city: San José
+    country: Costa Rica
+    sport: soccer
+    gender: women
+    age_groups:
+      - U17
+      - U19
+      - college
+    level_score: 5
+    description: Select team of the Costa Rican women's league. Friendly and welcoming, good for D3 and
+      club teams.
+  - key: universidad-de-costa-rica-fc
+    name: Universidad de Costa Rica FC
+    city: San José
+    country: Costa Rica
+    sport: soccer
+    gender: men
+    age_groups:
+      - college
+    level_score: 4
+    description: University team; mixed level, strong focus on cultural exchange and community service
+      day.
+experiences:
+  - key: la-bombonera-stadium-museum-tour
+    title: La Bombonera stadium & museum tour
+    city: Buenos Aires
+    country: Argentina
+    sports: []
+    duration_hours: 3
+    price_usd: 35
+    description: Guided tour of Boca Juniors' stadium and museum in La Boca, plus Caminito street walk.
+  - key: el-monumental-stadium-tour
+    title: El Monumental stadium tour
+    city: Buenos Aires
+    country: Argentina
+    sports: []
+    duration_hours: 2.5
+    price_usd: 35
+    description: River Plate's stadium, Argentina's national team home, with museum visit.
+  - key: live-liga-profesional-match
+    title: Live Liga Profesional match
+    city: Buenos Aires
+    country: Argentina
+    sports: []
+    duration_hours: 4
+    price_usd: 120
+    description: Attend a top-flight Argentine league match with secure seating and escorted transport.
+      Subject to the fixture.
+  - key: training-session-with-afa-certified-coaches
+    title: Training session with AFA-certified coaches
+    city: Buenos Aires
+    country: Argentina
+    sports:
+      - soccer
+    duration_hours: 2
+    price_usd: 40
+    description: Technical session run by AFA-licensed coaches focusing on Argentine-style possession
+      and pressing.
+  - key: tango-class-asado-night
+    title: Tango class & asado night
+    city: Buenos Aires
+    country: Argentina
+    sports: []
+    duration_hours: 3
+    price_usd: 55
+    description: 'Team-building evening: beginner tango lesson followed by a traditional Argentine barbecue.'
+  - key: tigre-delta-boat-trip
+    title: Tigre Delta boat trip
+    city: Buenos Aires
+    country: Argentina
+    sports: []
+    duration_hours: 5
+    price_usd: 45
+    description: Half-day excursion by boat through the Paraná Delta islands.
+  - key: community-clinic-with-local-kids
+    title: Community clinic with local kids
+    city: Buenos Aires
+    country: Argentina
+    sports: []
+    duration_hours: 2
+    price_usd: 10
+    description: Players run a clinic for a neighborhood club's kids and donate gear. Popular with college
+      programs needing service hours.
+  - key: maracana-stadium-tour
+    title: Maracanã stadium tour
+    city: Rio de Janeiro
+    country: Brazil
+    sports: []
+    duration_hours: 2
+    price_usd: 40
+    description: Behind-the-scenes tour of the Maracanã, including locker rooms and pitch-side.
+  - key: beach-futev-lei-session
+    title: Beach futevôlei session
+    city: Rio de Janeiro
+    country: Brazil
+    sports: []
+    duration_hours: 2
+    price_usd: 30
+    description: Footvolley on Copacabana beach with local players.
+  - key: christ-the-redeemer-sugarloaf-day
+    title: Christ the Redeemer & Sugarloaf day
+    city: Rio de Janeiro
+    country: Brazil
+    sports: []
+    duration_hours: 7
+    price_usd: 90
+    description: Full-day city highlights tour.
+  - key: arenal-volcano-hot-springs
+    title: Arenal volcano & hot springs
+    city: San José
+    country: Costa Rica
+    sports: []
+    duration_hours: 10
+    price_usd: 110
+    description: 'Day trip to La Fortuna: volcano views, hanging bridges and hot springs recovery session.'
+  - key: training-at-the-national-team-complex
+    title: Training at the national team complex
+    city: San José
+    country: Costa Rica
+    sports:
+      - soccer
+    duration_hours: 2
+    price_usd: 45
+    description: Session at a FIFA-standard training complex with local coaches.
+documents:
+  # Payment and cancellation terms mirror IGS's published Terms & Conditions
+  # (infinityglobalsports.com/terms-and-conditions, checked 2026-10-22): "$95 enrollment fee";
+  # manual plan "first payment of $500 due 30 days after enrollment; second payment of $500 due
+  # 90 days after enrollment; final balance due 110 days before departure"; cancellation tiers at
+  # 150 / 149-110 / 109-45 / 44 days. Key kept stable for references; content follows the terms.
+  - key: deposits-and-payment-schedule
+    title: Enrollment fee and payment schedule
+    source: policy
+    mime_type: text/markdown
+    content: Each traveler enrolls with a non-refundable $95 enrollment fee. Travelers can pay in full
+      at enrollment or use the payment plan, invoiced in up to three payments - $500 due 30 days after
+      enrollment, $500 due 90 days after enrollment, and the final balance due 110 days before
+      departure. A $100 late fee applies to any missed payment, and a $50 fee to returned or declined
+      payments. An automatic plan is also available (at least three monthly payments, scheduled
+      between the 1st and 26th of the month). There is no separate percentage deposit.
+  - key: cancellation-policy
+    title: Cancellation policy
+    source: policy
+    mime_type: text/markdown
+    content: 150 days or more before departure, full refund less the $95 enrollment fee. 149 to 110
+      days, full refund less the $95 fee, all non-refundable fees and a $300 cancellation fee. 109 to
+      45 days, full refund less the $95 fee, all non-refundable fees and 50% of the program price. 44
+      days or less, no refund except under the Flexible Travel Program. A traveler can be replaced
+      until 110 days before departure (a $100 substitution fee applies from 149 to 110 days).
+      Refunds are processed within 4-6 weeks. We strongly recommend travel insurance.
+  - key: what-the-price-includes
+    title: What the price includes
+    source: policy
+    mime_type: text/markdown
+    content: Prices are per person and include hotel (twin/triple rooms), private bus for the whole stay,
+      all matches with certified referees, training sessions, listed experiences, bilingual tour leader
+      24/7, and breakfast daily. Flights to the destination are not included; we can quote group airfare
+      separately.
+  - key: coach-and-staff-spots
+    title: Coach and staff spots
+    source: policy
+    mime_type: text/markdown
+    content: One free coach spot for every 15 paying players. Additional staff pay the adult rate. Parent
+      and family packages are available on request as a separate itinerary.
+  - key: safety-and-supervision
+    title: Safety and supervision
+    source: safety
+    mime_type: text/markdown
+    content: Teams are accompanied 24/7 by a bilingual tour leader. Hotels are in safe neighborhoods (Palermo
+      in Buenos Aires, Barra da Tijuca in Rio). Transport is always private. Medical insurance with emergency
+      coverage is required and we can arrange it.
+  - key: entry-requirements-for-us-citizens
+    title: Entry requirements for US citizens
+    source: travel
+    mime_type: text/markdown
+    content: 'Argentina: no visa required for US passport holders for stays under 90 days; proof of
+      health insurance is required for foreigners (DNU 366/2025). Costa Rica: no visa required for stays
+      under 90 days. Brazil: US citizens need an electronic visa (e-visa) applied online before travel,
+      only at brazil.vfsevisa.com (US$ 80.90, required since April 10, 2025); a minor''s e-visa needs the
+      birth certificate and an authorization signed by both parents, so apply about two months ahead.
+      Spain: no visa for up to 90 days in any 180; the passport must be valid 3 months after leaving the
+      Schengen area and issued within the last 10 years; ETIAS is not in operation yet. Passports must
+      be valid for the whole trip; we recommend 6 months after return because some airlines ask for it.
+      Every minor travels with a notarized consent from both parents naming the group adult. This is
+      guidance checked on October 23, 2026; teams must check official sources before booking flights.'
+
+  - key: best-time-to-travel
+    title: Best time to travel
+    source: travel
+    mime_type: text/markdown
+    content: 'Argentina and Brazil are in the southern hemisphere: their winter is June to August (mild
+      in Buenos Aires, 8-15°C) and summer is December to February (hot, 25-35°C). Spring break (March)
+      and early summer (May-June) are the most popular windows for US college programs. Costa Rica is
+      best in the dry season, December to April.'
+  - key: how-we-match-opponents
+    title: How we match opponents
+    source: sports
+    mime_type: text/markdown
+    content: 'We match every opponent by sport, gender, age group and level. Level is scored 1-10: 3-4
+      recreational, 5 D3 / regional club, 6 D2 / strong club, 7 D1 / ECNL-level club, 8+ pre-professional
+      academies. We aim for opponents within 1 point of the visiting team so every game is competitive.
+      Teams can request a mix of one stronger and one easier game.'
+  - key: performance-analysis-package
+    title: Performance analysis package
+    source: sports
+    mime_type: text/markdown
+    content: 'Optional add-on: every match is filmed from an elevated angle, with a post-match video review
+      session and an individual clip pack per player. Pre-match scouting reports on each opponent are
+      included in the standard package.'
+  - key: typical-itinerary-length
+    title: Typical itinerary length
+    source: trip-types
+    mime_type: text/markdown
+    content: Most soccer tours run 8 to 12 days with 3 or 4 matches, 3 to 5 training sessions, and 3 to
+      5 cultural experiences. We leave at least one rest day between matches.
+  - key: pricing-ranges
+    title: Pricing ranges
+    source: trip-types
+    mime_type: text/markdown
+    content: As a guide, a 10-day Buenos Aires soccer tour costs between $2,400 and $3,200 per person
+      depending on hotel category, number of experiences and season. Rio de Janeiro is 10-15% higher.
+      Costa Rica is similar to Buenos Aires.
+  - key: dietary-and-medical-needs
+    title: Dietary and medical needs
+    source: faq
+    mime_type: text/markdown
+    content: We handle dietary restrictions (vegetarian, gluten free, allergies) with hotels and restaurants
+      in advance. Teams send a rooming list and medical/dietary form 30 days before departure.

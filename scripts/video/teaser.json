@@ -1,0 +1,13 @@
+{
+  "text": "IGS OS runs a sports tour operation with agents and durable flows. Account 360 explains every client, with sources. Agents draft, people approve, and the flow resumes on its own. A guide explains every screen in real time. Built with agents, for an operation run by people.",
+  "cuts": [
+    {"scene": "card-open", "from": 0, "length": 3},
+    {"scene": "02-today", "from": 2.5, "length": 3.5},
+    {"scene": "03-account", "from": 3.0, "length": 4.5},
+    {"scene": "04-copilot", "from": 4.5, "length": 4},
+    {"scene": "05-approvals", "from": 8.0, "length": 4},
+    {"scene": "06-editor", "from": 2.0, "length": 3.5},
+    {"scene": "09-guide", "from": 6.0, "length": 5},
+    {"scene": "card-close", "from": 0, "length": 2.5}
+  ]
+}

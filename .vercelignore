@@ -1,0 +1,16 @@
+# Vercel builds apps/web remotely from the repo root (pnpm workspace + packages/flow-schema).
+# Upload only what the web build needs.
+**/node_modules
+**/.venv
+**/.next
+**/__pycache__
+services/
+spikes/
+loadtest/
+evals/
+infra/
+docs/
+scripts/
+.github/
+*.mp4
+!apps/web/public/demo/*.mp4

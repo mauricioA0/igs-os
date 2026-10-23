@@ -1,0 +1,75 @@
+name: e2e
+
+# The 2-minute demo story, route smoke tests and axe checks (apps/web/e2e) against a real
+# stack: pgvector Postgres, migrated + seeded demo tenant, FastAPI core and the built web app.
+# Playwright's webServer config boots the API (uvicorn) and `next start`; model-backed calls are
+# mocked in the browser and OPENAI_API_KEY is empty, so this job never spends money.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: igs
+          POSTGRES_PASSWORD: igs
+          POSTGRES_DB: igs
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U igs -d igs"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://igs:igs@localhost:5433/igs
+      IGS_DATABASE_URL: postgres://igs:igs@localhost:5433/igs
+      API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      OPENAI_API_KEY: ""
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv sync --locked --all-packages
+      - name: Migrate and seed the demo tenant
+        run: |
+          uv run alembic -c packages/py-common/alembic.ini upgrade head
+          uv run python -m igs_common.seed
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Install Chromium
+        run: pnpm --filter web exec playwright install --with-deps chromium
+      - name: Playwright
+        run: pnpm --filter web exec playwright test
+      - name: Upload report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report
+          path: |
+            apps/web/e2e/.report
+            apps/web/e2e/.results
+          retention-days: 14

@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Everything outside the Temporal Helm release. Apply order in the pipeline:
+#   1. namespaces + service accounts + temporal-db config  2. temporal-schema Job (wait)
+#   3. helm upgrade temporal  4. the rest (ILB, IAP, workers, KEDA, policies, monitoring)
+resources:
+  - namespaces.yaml
+  - serviceaccounts.yaml
+  - temporal-db-config.yaml
+  - temporal-schema-job.yaml
+  - temporal-frontend-ilb.yaml
+  - temporal-ui-iap.yaml
+  - workers.yaml
+  - keda.yaml
+  - networkpolicies.yaml
+  - monitoring.yaml
+images:
+  - name: igs-worker
+    newName: us-central1-docker.pkg.dev/mv-cloud-509914/igs/worker
+    newTag: latest # the pipeline pins the git SHA

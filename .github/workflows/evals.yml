@@ -1,0 +1,95 @@
+name: evals
+
+# Dry evals (no network, no secrets) gate every PR. Full evals call paid models: nightly, on
+# PRs labeled `evals:full`, or manually. Results land in the job summary and as an artifact.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  schedule:
+    - cron: "0 6 * * *" # 03:00 ART
+  workflow_dispatch:
+    inputs:
+      args:
+        description: Extra args for `python -m evals.run` (e.g. --suite agent --trials 5)
+        required: false
+        default: ""
+
+concurrency:
+  group: evals-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  dry:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv sync --locked --all-packages
+      - run: uv run pytest evals/tests -q
+      - name: Dry evals
+        run: uv run python -m evals.run --dry --out evals/results/ci
+      - if: always()
+        run: cat evals/results/ci/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+
+  full:
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'evals:full'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: igs
+          POSTGRES_PASSWORD: igs
+          POSTGRES_DB: igs
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U igs -d igs"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://igs:igs@localhost:5433/igs
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      IGS_LLM_MODELS: ${{ vars.IGS_LLM_MODELS }}
+      EVALS_ALLOW_PAID: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv sync --locked --all-packages
+      - name: Migrate and seed the demo tenant
+        run: |
+          uv run alembic -c packages/py-common/alembic.ini upgrade head
+          uv run python -m igs_common.seed
+      - name: Full evals
+        env:
+          EXTRA_ARGS: ${{ github.event.inputs.args }}
+        run: |
+          read -ra extra <<< "$EXTRA_ARGS"
+          uv run python -m evals.run --out evals/results/ci "${extra[@]}"
+      - if: always()
+        run: cat evals/results/ci/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: evals-${{ github.run_id }}
+          path: evals/results/ci
+          retention-days: 30

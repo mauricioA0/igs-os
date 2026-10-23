@@ -1,0 +1,43 @@
+services:
+  # App database (Postgres 17 + pgvector for the local VectorStore adapter).
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: igs
+      POSTGRES_PASSWORD: igs
+      POSTGRES_DB: igs
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U igs -d igs"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Temporal dev server (single binary, SQLite persistence) + Web UI.
+  # Production runs the Helm chart on GKE Autopilot; see docs/architecture/temporal.md.
+  temporal:
+    image: temporalio/temporal:1.9.1
+    command:
+      - server
+      - start-dev
+      - --ip=0.0.0.0
+      - --db-filename=/home/temporal/temporal.db
+      - --namespace=igs
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    volumes:
+      # /home/temporal exists in the image owned by uid 1000, so the new volume inherits it.
+      - temporaldata:/home/temporal
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health", "--address", "127.0.0.1:7233"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  pgdata:
+  temporaldata:

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "kb:deposits-and-payment-schedule",
+    "type": "knowledge",
+    "text": "Deposits and payment schedule. A 30% deposit confirms the trip and locks hotel and match bookings. The balance is due 45 days before departure. Payments by ACH or wire transfer in USD; card payments carry a 3% fee."
+  },
+  {
+    "id": "kb:cancellation-policy",
+    "type": "knowledge",
+    "text": "Cancellation policy. Cancellations more than 90 days before departure get the deposit back minus a $50 per person admin fee. Between 90 and 45 days, the deposit is non-refundable. Under 45 days, 100% of the trip cost is charged unless the spot is resold. We strongly recommend travel insurance."
+  },
+  {
+    "id": "kb:what-the-price-includes",
+    "type": "knowledge",
+    "text": "What the price includes. Prices are per person and include hotel (twin/triple rooms), private bus for the whole stay, all matches with certified referees, training sessions, listed experiences, bilingual tour leader 24/7, and breakfast daily. Flights to the destination are not included; we can quote group airfare separately."
+  },
+  {
+    "id": "kb:coach-and-staff-spots",
+    "type": "knowledge",
+    "text": "Coach and staff spots. One free coach spot for every 15 paying players. Additional staff pay the adult rate. Parent and family packages are available on request as a separate itinerary."
+  },
+  {
+    "id": "kb:safety-and-supervision",
+    "type": "knowledge",
+    "text": "Safety and supervision. Teams are accompanied 24/7 by a bilingual tour leader. Hotels are in safe neighborhoods (Palermo in Buenos Aires, Barra da Tijuca in Rio). Transport is always private. Medical insurance with emergency coverage is required and we can arrange it."
+  },
+  {
+    "id": "kb:entry-requirements-for-us-citizens",
+    "type": "knowledge",
+    "text": "Entry requirements for US citizens. Argentina: no visa required for US passport holders for stays under 90 days. Costa Rica: no visa required for stays under 90 days. Brazil: US citizens need an electronic visa (e-visa) applied online before travel. Passports must be valid for at least 6 months. This is guidance only; teams must check official sources before booking flights."
+  },
+  {
+    "id": "kb:best-time-to-travel",
+    "type": "knowledge",
+    "text": "Best time to travel. Argentina and Brazil are in the southern hemisphere: their winter is June to August (mild in Buenos Aires, 8-15°C) and summer is December to February (hot, 25-35°C). Spring break (March) and early summer (May-June) are the most popular windows for US college programs. Costa Rica is best in the dry season, December to April."
+  },
+  {
+    "id": "kb:how-we-match-opponents",
+    "type": "knowledge",
+    "text": "How we match opponents. We match every opponent by sport, gender, age group and level. Level is scored 1-10: 3-4 recreational, 5 D3 / regional club, 6 D2 / strong club, 7 D1 / ECNL-level club, 8+ pre-professional academies. We aim for opponents within 1 point of the visiting team so every game is competitive. Teams can request a mix of one stronger and one easier game."
+  },
+  {
+    "id": "kb:performance-analysis-package",
+    "type": "knowledge",
+    "text": "Performance analysis package. Optional add-on: every match is filmed from an elevated angle, with a post-match video review session and an individual clip pack per player. Pre-match scouting reports on each opponent are included in the standard package."
+  },
+  {
+    "id": "kb:typical-itinerary-length",
+    "type": "knowledge",
+    "text": "Typical itinerary length. Most soccer tours run 8 to 12 days with 3 or 4 matches, 3 to 5 training sessions, and 3 to 5 cultural experiences. We leave at least one rest day between matches."
+  },
+  {
+    "id": "kb:pricing-ranges",
+    "type": "knowledge",
+    "text": "Pricing ranges. As a guide, a 10-day Buenos Aires soccer tour costs between $2,400 and $3,200 per person depending on hotel category, number of experiences and season. Rio de Janeiro is 10-15% higher. Costa Rica is similar to Buenos Aires."
+  },
+  {
+    "id": "kb:dietary-and-medical-needs",
+    "type": "knowledge",
+    "text": "Dietary and medical needs. We handle dietary restrictions (vegetarian, gluten free, allergies) with hotels and restaurants in advance. Teams send a rooming list and medical/dietary form 30 days before departure."
+  },
+  {
+    "id": "opp:academia-palermo-fc",
+    "type": "opponent",
+    "text": "Academia Palermo FC (Buenos Aires, Argentina). soccer, men, age groups U15/U17/U19, level 8/10. Pre-professional academy feeding Primera División clubs. High-tempo pressing, very technical midfielders. Best for elite club teams and strong college programs."
+  },
+  {
+    "id": "opp:club-social-villa-urquiza",
+    "type": "opponent",
+    "text": "Club Social Villa Urquiza (Buenos Aires, Argentina). soccer, men, age groups U15/U17/U19/college, level 6/10. Traditional neighborhood club with a competitive amateur first team. Physical, direct play. Good match for D2/D3 college programs."
+  },
+  {
+    "id": "opp:liga-universitaria-uba-select",
+    "type": "opponent",
+    "text": "Liga Universitaria UBA Select (Buenos Aires, Argentina). soccer, men, age groups college, level 5/10. University all-star selection. Friendly cultural exchange atmosphere, post-match asado with players."
+  },
+  {
+    "id": "opp:deportivo-belgrano-femenino",
+    "type": "opponent",
+    "text": "Deportivo Belgrano Femenino (Buenos Aires, Argentina). soccer, women, age groups U17/U19/college, level 7/10. Women's first team plays in the top amateur league; several players capped at youth national level. Quick wingers, strong set pieces."
+  },
+  {
+    "id": "opp:escuela-de-f-tbol-femenino-sur",
+    "type": "opponent",
+    "text": "Escuela de Fútbol Femenino Sur (Buenos Aires, Argentina). soccer, women, age groups U15/U17, level 5/10. Grassroots women's program in the south of the city. Ideal for youth club teams wanting a competitive but friendly game."
+  },
+  {
+    "id": "opp:club-atl-tico-n-ez-juveniles",
+    "type": "opponent",
+    "text": "Club Atlético Núñez Juveniles (Buenos Aires, Argentina). soccer, men, age groups U13/U15, level 6/10. Youth divisions with a strong possession philosophy. Great for younger elite club teams."
+  },
+  {
+    "id": "opp:san-isidro-rugby-club-juveniles",
+    "type": "opponent",
+    "text": "San Isidro Rugby Club Juveniles (Buenos Aires, Argentina). rugby, men, age groups U17/U19, level 8/10. Historic rugby culture of the northern suburbs. Strong forwards, demanding contact game."
+  },
+  {
+    "id": "opp:hockey-club-olivos",
+    "type": "opponent",
+    "text": "Hockey Club Olivos (Buenos Aires, Argentina). field hockey, women, age groups U17/U19/college, level 7/10. Field hockey club in the home of Las Leonas tradition. Synthetic water-based turf."
+  },
+  {
+    "id": "opp:voleibol-club-caballito",
+    "type": "opponent",
+    "text": "Voleibol Club Caballito (Buenos Aires, Argentina). volleyball, women, age groups U17/U19/college, level 6/10. Indoor volleyball club competing in the metropolitan league."
+  },
+  {
+    "id": "opp:b-squet-club-villa-crespo",
+    "type": "opponent",
+    "text": "Básquet Club Villa Crespo (Buenos Aires, Argentina). basketball, men, age groups U17/U19/college, level 6/10. Gritty indoor basketball culture; plays in the Buenos Aires federation league."
+  },
+  {
+    "id": "opp:escolinha-barra-fc",
+    "type": "opponent",
+    "text": "Escolinha Barra FC (Rio de Janeiro, Brazil). soccer, men, age groups U15/U17, level 7/10. Brazilian youth academy with futsal-trained, creative players. Skill-heavy, fast combinations."
+  },
+  {
+    "id": "opp:carioca-universit-rio",
+    "type": "opponent",
+    "text": "Carioca Universitário (Rio de Janeiro, Brazil). soccer, men, age groups college, level 5/10. University team from Rio; relaxed, friendly exchange, games on natural grass by the coast."
+  },
+  {
+    "id": "opp:meninas-do-rio-fc",
+    "type": "opponent",
+    "text": "Meninas do Rio FC (Rio de Janeiro, Brazil). soccer, women, age groups U17/U19/college, level 7/10. Women's club with players who trained around the 2027 Women's World Cup host-city programs. Technical and physical."
+  },
+  {
+    "id": "opp:saprissa-fuerza-juvenil",
+    "type": "opponent",
+    "text": "Saprissa Fuerza Juvenil (San José, Costa Rica). soccer, men, age groups U15/U17/U19, level 7/10. Costa Rican youth setup with a well-organized defensive style."
+  },
+  {
+    "id": "opp:liga-tica-femenina-select",
+    "type": "opponent",
+    "text": "Liga Tica Femenina Select (San José, Costa Rica). soccer, women, age groups U17/U19/college, level 5/10. Select team of the Costa Rican women's league. Friendly and welcoming, good for D3 and club teams."
+  },
+  {
+    "id": "opp:universidad-de-costa-rica-fc",
+    "type": "opponent",
+    "text": "Universidad de Costa Rica FC (San José, Costa Rica). soccer, men, age groups college, level 4/10. University team; mixed level, strong focus on cultural exchange and community service day."
+  },
+  {
+    "id": "exp:la-bombonera-stadium-museum-tour",
+    "type": "experience",
+    "text": "La Bombonera stadium & museum tour (Buenos Aires, Argentina). 3h, $35 per person. Guided tour of Boca Juniors' stadium and museum in La Boca, plus Caminito street walk."
+  },
+  {
+    "id": "exp:el-monumental-stadium-tour",
+    "type": "experience",
+    "text": "El Monumental stadium tour (Buenos Aires, Argentina). 2.5h, $35 per person. River Plate's stadium, Argentina's national team home, with museum visit."
+  },
+  {
+    "id": "exp:live-liga-profesional-match",
+    "type": "experience",
+    "text": "Live Liga Profesional match (Buenos Aires, Argentina). 4h, $120 per person. Attend a top-flight Argentine league match with secure seating and escorted transport. Subject to the fixture."
+  },
+  {
+    "id": "exp:training-session-with-afa-certified-coaches",
+    "type": "experience",
+    "text": "Training session with AFA-certified coaches (Buenos Aires, Argentina). 2h, $40 per person. Technical session run by AFA-licensed coaches focusing on Argentine-style possession and pressing."
+  },
+  {
+    "id": "exp:tango-class-asado-night",
+    "type": "experience",
+    "text": "Tango class & asado night (Buenos Aires, Argentina). 3h, $55 per person. Team-building evening: beginner tango lesson followed by a traditional Argentine barbecue."
+  },
+  {
+    "id": "exp:tigre-delta-boat-trip",
+    "type": "experience",
+    "text": "Tigre Delta boat trip (Buenos Aires, Argentina). 5h, $45 per person. Half-day excursion by boat through the Paraná Delta islands."
+  },
+  {
+    "id": "exp:community-clinic-with-local-kids",
+    "type": "experience",
+    "text": "Community clinic with local kids (Buenos Aires, Argentina). 2h, $10 per person. Players run a clinic for a neighborhood club's kids and donate gear. Popular with college programs needing service hours."
+  },
+  {
+    "id": "exp:maracan-stadium-tour",
+    "type": "experience",
+    "text": "Maracanã stadium tour (Rio de Janeiro, Brazil). 2h, $40 per person. Behind-the-scenes tour of the Maracanã, including locker rooms and pitch-side."
+  },
+  {
+    "id": "exp:beach-futev-lei-session",
+    "type": "experience",
+    "text": "Beach futevôlei session (Rio de Janeiro, Brazil). 2h, $30 per person. Footvolley on Copacabana beach with local players."
+  },
+  {
+    "id": "exp:christ-the-redeemer-sugarloaf-day",
+    "type": "experience",
+    "text": "Christ the Redeemer & Sugarloaf day (Rio de Janeiro, Brazil). 7h, $90 per person. Full-day city highlights tour."
+  },
+  {
+    "id": "exp:arenal-volcano-hot-springs",
+    "type": "experience",
+    "text": "Arenal volcano & hot springs (San José, Costa Rica). 10h, $110 per person. Day trip to La Fortuna: volcano views, hanging bridges and hot springs recovery session."
+  },
+  {
+    "id": "exp:training-at-the-national-team-complex",
+    "type": "experience",
+    "text": "Training at the national team complex (San José, Costa Rica). 2h, $45 per person. Session at a FIFA-standard training complex with local coaches."
+  }
+]

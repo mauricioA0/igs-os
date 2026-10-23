@@ -1,0 +1,129 @@
+# Temporal server on GKE Autopilot — base values for the official chart.
+#   helm repo add temporal https://go.temporal.io/helm-charts
+#   helm upgrade --install temporal temporal/temporal --version 1.7.0 -n temporal \
+#     -f values.yaml -f values-<env>.yaml \
+#     --set-string server.config.persistence.datastores.default.sql.connectAddr=<db ip>:5432 \
+#     --set-string server.config.persistence.datastores.visibility.sql.connectAddr=<db ip>:5432
+# Chart 1.7.0 ships Temporal Server 1.32.0. See docs/architecture/temporal.md and README.md here.
+
+server:
+  image:
+    repository: temporalio/server
+    tag: 1.32.0
+  # Workload Identity: the KSA is created by infra/k8s (temporal-server) and bound to a GSA in
+  # Terraform. Cloud SQL is reached over private IP, so no proxy sidecar and no key files.
+  securityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  config:
+    logLevel: "info"
+    persistence:
+      defaultStore: default
+      visibilityStore: visibility
+      # Fixed for the life of the cluster: changing it later means a new cluster + migration.
+      numHistoryShards: 512
+      datastores:
+        default:
+          sql:
+            # postgres12_pgx: the maintained Postgres plugin. The chart's managed schema job is off;
+            # infra/k8s/base/temporal-schema-job.yaml runs temporal-sql-tool as a pipeline step.
+            pluginName: postgres12_pgx
+            driverName: postgres12_pgx
+            createDatabase: false
+            manageSchema: false
+            databaseName: temporal
+            connectAddr: "TEMPORAL_DB_HOST:5432" # overridden by the deploy pipeline (Terraform output)
+            connectProtocol: tcp
+            user: temporal
+            existingSecret: temporal-db # synced from Secret Manager by the deploy pipeline
+            secretKey: password
+            maxConns: 20
+            maxIdleConns: 20
+            maxConnLifetime: "1h"
+            tls:
+              enabled: true
+              # Cloud SQL's server certificate is not issued for the private IP.
+              enableHostVerification: false
+        visibility:
+          sql:
+            # Advanced visibility on Postgres 12+: no Elasticsearch.
+            pluginName: postgres12_pgx
+            driverName: postgres12_pgx
+            createDatabase: false
+            manageSchema: false
+            databaseName: temporal_visibility
+            connectAddr: "TEMPORAL_DB_HOST:5432"
+            connectProtocol: tcp
+            user: temporal
+            existingSecret: temporal-db
+            secretKey: password
+            maxConns: 10
+            maxIdleConns: 10
+            maxConnLifetime: "1h"
+            tls:
+              enabled: true
+              enableHostVerification: false
+    namespaces:
+      create: true
+      useHelmHooks: true
+      namespace:
+        - name: igs
+          retention: 14d
+  # Autopilot bills requests: set them explicitly per service (base = demo-sized).
+  frontend:
+    resources:
+      requests: { cpu: 250m, memory: 512Mi }
+      limits: { memory: 512Mi }
+  history:
+    resources:
+      requests: { cpu: 500m, memory: 1Gi }
+      limits: { memory: 1Gi }
+  matching:
+    resources:
+      requests: { cpu: 250m, memory: 512Mi }
+      limits: { memory: 512Mi }
+  worker:
+    resources:
+      requests: { cpu: 250m, memory: 512Mi }
+      limits: { memory: 512Mi }
+
+serviceAccount:
+  create: false
+  name: temporal-server
+
+# Schema is managed outside Helm (see manageSchema above); keep the chart's job out of the way.
+schema:
+  useHelmHooks: false
+
+admintools:
+  enabled: true
+  image:
+    repository: temporalio/admin-tools
+    tag: "1.32.0"
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { memory: 256Mi }
+
+web:
+  enabled: true
+  image:
+    repository: temporalio/ui
+    tag: 2.54.1
+  # The UI is only reachable through the IAP-protected GCLB in infra/k8s/base/temporal-ui-iap.yaml.
+  # The Temporal UI's own OIDC login does not restrict which Google accounts may sign in.
+  ingress:
+    enabled: false
+  service:
+    type: ClusterIP
+    annotations:
+      cloud.google.com/neg: '{"ingress": true}'
+      cloud.google.com/backend-config: '{"default": "temporal-ui-iap"}'
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { memory: 256Mi }
+  additionalEnv:
+    - name: TEMPORAL_DEFAULT_NAMESPACE
+      value: igs

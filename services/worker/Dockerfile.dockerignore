@@ -1,0 +1,13 @@
+# BuildKit uses <Dockerfile>.dockerignore for this build only (the repo root context is huge:
+# node_modules, model weights, venvs). Allow-list what the image needs.
+*
+!pyproject.toml
+!uv.lock
+!packages/py-common/pyproject.toml
+!packages/py-common/src/**
+!packages/py-common/pricing/**
+!services/core/pyproject.toml
+!services/worker/pyproject.toml
+!services/worker/src/**
+!services/worker/README.md
+**/__pycache__

@@ -1,0 +1,54 @@
+# Temporal Web UI behind Identity-Aware Proxy. The UI can reset/terminate any workflow, so only
+# principals granted roles/iap.httpsResourceAccessor (Terraform) get through.
+# The chart's `temporal-web` Service carries the NEG + backend-config annotations (helm values).
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: temporal-ui-iap
+  namespace: temporal
+spec:
+  iap:
+    enabled: true
+    oauthclientCredentials:
+      secretName: temporal-ui-iap-oauth # client_id / client_secret, created by the pipeline
+  healthCheck:
+    type: HTTP
+    requestPath: /healthz
+    port: 8080
+  timeoutSec: 60
+---
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: temporal-ui-https
+  namespace: temporal
+spec:
+  # HTTPS only (allow-http is false on the Ingress), so no redirect listener is needed.
+  sslPolicy: igs-modern-tls # created in Terraform (TLS 1.2+, MODERN)
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: temporal-ui
+  namespace: temporal
+spec:
+  domains:
+    - temporal.igs-os.example # replaced per env
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: temporal-ui
+  namespace: temporal
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: igs-temporal-ui-ip # Terraform
+    networking.gke.io/managed-certificates: temporal-ui
+    networking.gke.io/v1beta1.FrontendConfig: temporal-ui-https
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  defaultBackend:
+    service:
+      name: temporal-web
+      port:
+        number: 8080

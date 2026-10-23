@@ -1,0 +1,109 @@
+# Golden Q&A over the IGS knowledge base (catalog.yaml `documents`).
+# `sources` = document keys that must be retrieved. Mix of EN/ES, coach- and ops-style, paraphrases.
+version: 1
+questions:
+  - id: k01
+    lang: en
+    question: How much do we need to pay to lock the trip?
+    answer: A non-refundable $95 enrollment fee per traveler; then $500 30 days after enrollment, $500 at 90 days and the final balance 110 days before departure (or pay in full).
+    sources: [deposits-and-payment-schedule]
+  - id: k02
+    lang: es
+    question: ¿Cuándo vence el saldo de la gira?
+    answer: 110 días antes de la salida.
+    sources: [deposits-and-payment-schedule]
+  - id: k03
+    lang: en
+    question: Is there a fee if we miss a payment or a card is declined?
+    answer: A $100 late fee for any missed payment and a $50 fee for returned or declined payments.
+    sources: [deposits-and-payment-schedule]
+  - id: k04
+    lang: en
+    question: What happens if we cancel 60 days before we fly?
+    answer: From 109 to 45 days, refund less the $95 enrollment fee, all non-refundable fees and 50% of the program price.
+    sources: [cancellation-policy]
+    tags: [paraphrase]
+  - id: k05
+    lang: es
+    question: Si un equipo cancela con más de 150 días, ¿le devolvemos lo pagado?
+    answer: Sí, reembolso total menos el fee de inscripción de US$95.
+    sources: [cancellation-policy]
+  - id: k06
+    lang: en
+    question: Are flights included in the per-person price?
+    answer: No, flights are not included; group airfare can be quoted separately.
+    sources: [what-the-price-includes]
+  - id: k07
+    lang: en
+    question: Do players share rooms?
+    answer: Hotel in twin/triple rooms is included.
+    sources: [what-the-price-includes]
+    tags: [paraphrase]
+  - id: k08
+    lang: en
+    question: How many coaches travel for free?
+    answer: One free coach spot for every 15 paying players.
+    sources: [coach-and-staff-spots]
+  - id: k09
+    lang: es
+    question: ¿Los padres pueden viajar con el equipo?
+    answer: Hay paquetes para familias como itinerario aparte, a pedido.
+    sources: [coach-and-staff-spots]
+  - id: k10
+    lang: en
+    question: Is Buenos Aires safe for a group of college athletes?
+    answer: 24/7 bilingual tour leader, hotels in safe neighborhoods (Palermo), private transport always.
+    sources: [safety-and-supervision]
+  - id: k11
+    lang: en
+    question: Do my players need a visa for Brazil?
+    answer: US citizens need an electronic visa (e-visa) for Brazil.
+    sources: [entry-requirements-for-us-citizens]
+  - id: k12
+    lang: es
+    question: ¿Un estadounidense necesita visa para Argentina?
+    answer: No, para estadías menores a 90 días.
+    sources: [entry-requirements-for-us-citizens]
+  - id: k13
+    lang: en
+    question: What is the weather like in Buenos Aires in July?
+    answer: Winter, mild, 8-15°C.
+    sources: [best-time-to-travel]
+    tags: [paraphrase]
+  - id: k14
+    lang: en
+    question: When is the dry season in Costa Rica?
+    answer: December to April.
+    sources: [best-time-to-travel]
+  - id: k15
+    lang: en
+    question: How do you make sure the games are competitive for my team?
+    answer: Opponents matched by sport, gender, age group and level, within 1 point on a 1-10 scale.
+    sources: [how-we-match-opponents]
+    tags: [paraphrase]
+  - id: k16
+    lang: es
+    question: ¿Qué nivel tiene un equipo D1 en nuestra escala?
+    answer: 7 (D1 / ECNL-level club).
+    sources: [how-we-match-opponents]
+  - id: k17
+    lang: en
+    question: Can we get video of our matches?
+    answer: Optional performance analysis add-on, filmed from an elevated angle with review session and clip packs.
+    sources: [performance-analysis-package]
+  - id: k18
+    lang: en
+    question: How many matches does a typical tour include?
+    answer: 3 or 4 matches in 8-12 days, with rest days between matches.
+    sources: [typical-itinerary-length]
+  - id: k19
+    lang: en
+    question: Roughly how much does a 10-day soccer tour to Buenos Aires cost?
+    answer: Between USD 2,400 and 3,200 per person; Rio 10-15% higher.
+    sources: [pricing-ranges]
+  - id: k20
+    lang: es
+    question: Tenemos jugadoras celíacas, ¿cómo lo manejan?
+    answer: Se coordinan restricciones (sin gluten, vegetarianas, alergias) con hoteles y restaurantes; formulario 30 días antes.
+    sources: [dietary-and-medical-needs]
+    tags: [paraphrase]

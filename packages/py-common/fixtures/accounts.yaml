@@ -1,0 +1,1079 @@
+# Account 360 demo data. Every institution, person, email address and phone number is fictional
+# (`.example` domains, 555-01xx numbers). Stakeholders are adults only — no player data here.
+# Demo "today" is 2026-10-22. Internal notes from the Buenos Aires team are in Spanish.
+#
+# Shape follows docs/CONTRACTS.md "Account 360". `key` values are stable fixture ids; interaction keys
+# are what account-qa.yaml cites as expected sources.
+
+accounts:
+  # ─────────────────────────────────────────────────────────────────────────────
+  - key: acc-lakeshore
+    name: Lakeshore University
+    kind: university
+    country: USA
+    state: Michigan
+    city: Port Huron
+    sport_programs: [womens_soccer]
+    tier: A
+    owner: martin.rios
+    status: prospect
+    # Red by the deterministic rules: an open high-severity risk (fact-lak-hold-overdue — the team's
+    # US$95-per-traveler enrollment fees, IGS Terms & Conditions, are overdue). The demo story is
+    # resolving it: send the formal proposal before the Oct 28 budget meeting.
+    health: red
+    trips: [t-2711]
+    leads: [l-508]
+    stakeholders:
+      - key: st-lak-whitfield
+        name: Dana Whitfield
+        title: Head Coach, Women's Soccer
+        role: coach
+        influence: 4
+        sentiment: positive
+        email: dwhitfield@lakeshore.example
+        phone: "+1 810 555 0141"
+        preferred_channel: whatsapp
+        notes: Champion of the tour inside the department. Wants competitive games and a service day.
+      - key: st-lak-brennan
+        name: Kelly Brennan
+        title: Assistant Coach
+        role: assistant_coach
+        influence: 2
+        sentiment: positive
+        email: kbrennan@lakeshore.example
+        phone: "+1 810 555 0142"
+        preferred_channel: whatsapp
+        notes: Owns the rooming list, dietary needs and day-to-day logistics.
+      - key: st-lak-haines
+        name: Robert Haines
+        title: Senior Associate Athletic Director
+        role: athletic_director
+        influence: 5
+        sentiment: neutral
+        email: rhaines@lakeshore.example
+        phone: "+1 810 555 0143"
+        preferred_channel: email
+        notes: Final signer for contracts and purchase orders. Formal, prefers email. Comparing a competitor quote.
+      - key: st-lak-ruiz
+        name: Angela Ruiz
+        title: Team Travel Coordinator, Athletics Business Office
+        role: travel_coordinator
+        influence: 3
+        sentiment: neutral
+        email: aruiz@lakeshore.example
+        phone: "+1 810 555 0144"
+        preferred_channel: email
+        notes: Books flights through the university travel agency; handles vendor registration and insurance paperwork.
+      - key: st-lak-feld
+        name: Marcus Feld
+        title: Accounts Payable Manager
+        role: finance
+        influence: 3
+        sentiment: neutral
+        email: mfeld@lakeshore.example
+        phone: "+1 810 555 0145"
+        preferred_channel: email
+        notes: Releases payments only against an approved PO.
+      - key: st-lak-ostrowski
+        name: Jennifer Ostrowski
+        title: Team Parent Liaison
+        role: parent_liaison
+        influence: 2
+        sentiment: positive
+        email: jostrowski.parent@lakeshore.example
+        preferred_channel: email
+        notes: Coordinates parent questions; some parents may travel separately and join for the Monumental tour.
+    interactions:
+      - key: int-lak-01
+        stakeholder: st-lak-whitfield
+        channel: call
+        direction: inbound
+        occurred_at: "2026-08-25T15:00:00-03:00"
+        subject: Discovery call — spring break tour
+        lead: l-508
+        body: |
+          Dana called after finding us through a coaching clinic. Lakeshore Women's Soccer (NCAA D1, mid-table
+          in their conference, we scored them level 7) wants a 10-day Buenos Aires tour over spring break,
+          March 6–15, 2027. 21 players plus 3 staff. Budget target around USD 2,900 per person all-in
+          excluding flights. Must-haves: at least one really tough opponent "to see where we stand",
+          one easier game, and a community service activity — team culture is a priority this year.
+          She is the champion internally but the Senior Associate AD, Robert Haines, signs everything.
+      - key: int-lak-02
+        stakeholder: st-lak-haines
+        channel: meeting
+        direction: outbound
+        occurred_at: "2026-09-02T14:00:00-03:00"
+        subject: Video call with Dana Whitfield and Robert Haines
+        lead: l-508
+        body: |
+          Attendees: Robert Haines (Sr. Associate AD), Dana Whitfield, Martín Ríos.
+          Haines confirmed he is the final decision maker and signer. Conditions to proceed:
+          (1) contract must go through university procurement as a registered vendor,
+          (2) certificate of insurance naming Lakeshore University as additional insured,
+          (3) price locked in USD — no surcharges after signing.
+          Spring break is peak season in Buenos Aires, so we agreed the team enrolls by October 15 —
+          24 travelers × the US$95 non-refundable enrollment fee (US$2,280) — to keep the March hotel and
+          field blocks; the hotel releases them on October 31 if enrollment is not completed. Payment plan
+          per IGS terms: US$500 per traveler 30 days after enrollment and the final balance 110 days before
+          departure (November 16). Haines asked that all payment communication copy Accounts Payable.
+      - key: int-lak-03
+        stakeholder: st-lak-feld
+        channel: email
+        direction: outbound
+        occurred_at: "2026-09-05T10:00:00-03:00"
+        subject: "Enrollment invoice — 24 × US$95 due October 15"
+        lead: l-508
+        body: |
+          Hi Marcus, as agreed with Robert Haines, attached is the enrollment invoice for Lakeshore Women's
+          Soccer: 24 travelers × US$95 non-refundable enrollment fee = US$2,280. Enrolling keeps the
+          March 6–15, 2027 hotel and field blocks; it is due October 15 and the hotel releases the blocks
+          on October 31 if it is not received. Then US$500 per traveler is due 30 days after enrollment and
+          the final balance on November 16 (110 days before departure). — Martín
+      - key: int-lak-04
+        stakeholder: st-lak-ruiz
+        channel: email
+        direction: inbound
+        occurred_at: "2026-09-18T10:12:00-04:00"
+        subject: Vendor registration + insurance + flights
+        lead: l-508
+        body: |
+          Hello Martín, to finish the vendor setup procurement needs the foreign vendor form and your
+          certificate of insurance listing Lakeshore University as additional insured.
+          Flights are booked separately through our travel agency: tentatively Delta via Atlanta, arriving
+          EZE on March 6 at 08:40, departing March 15 at 21:15. Please plan the airport transfers around
+          those times. Thanks, Angela Ruiz — Athletics Business Office
+      - key: int-lak-05
+        stakeholder: st-lak-brennan
+        channel: whatsapp
+        direction: inbound
+        occurred_at: "2026-10-01T20:47:00-03:00"
+        subject: Diets + rest day
+        lead: l-508
+        body: |
+          Kelly: Hi! Heads up for planning: 2 players gluten-free, 1 vegetarian. Some players asked if we
+          could swap the Tigre boat trip for an extra training — Dana says keep Tigre, the team needs a rest day.
+          IGS (Lucía): Perfect, we'll pass the diets to the hotel and restaurants and keep Tigre as the rest day.
+      - key: int-lak-06
+        stakeholder: st-lak-ruiz
+        channel: email
+        direction: outbound
+        occurred_at: "2026-10-08T11:30:00-03:00"
+        subject: "Vendor form + certificate of insurance"
+        lead: l-508
+        body: |
+          Hi Angela, attached are the signed foreign vendor form and our certificate of insurance naming
+          Lakeshore University as additional insured. Let us know if procurement needs anything else. — Lucía
+      - key: int-lak-07
+        stakeholder: st-lak-feld
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-16T13:05:00-04:00"
+        subject: "RE: Enrollment invoice — payment delayed"
+        lead: l-508
+        body: |
+          Martín, apologies — the US$2,280 in enrollment fees did not go out on October 15. The new fiscal year
+          started October 1 and the budget line for the tour moved, so the purchase order has to be
+          re-approved by Robert Haines before we can release any funds. He wants to see the formal tour
+          proposal first and take it to the athletics budget meeting on October 28.
+      - key: int-lak-08
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-17T18:20:00-03:00"
+        subject: Inscripción vencida — estado y riesgo
+        lead: l-508
+        body: |
+          Los fees de inscripción (24 × US$95 = US$2.280) vencían el 15/10 y no llegaron: Haines tiene que re-aprobar la PO del
+          nuevo año fiscal y quiere la propuesta formal para la reunión de presupuesto del 28/10. Riesgo alto:
+          si no llega antes del 31/10 el hotel libera el bloqueo de marzo (temporada alta). Decisión: mandar la
+          propuesta formal esta semana y pedirle a Dana que la empuje con Haines. — Martín
+      - key: int-lak-09
+        stakeholder: st-lak-whitfield
+        channel: call
+        direction: outbound
+        occurred_at: "2026-10-20T16:30:00-03:00"
+        subject: Opponents for March
+        lead: l-508
+        body: |
+          Lucía called Dana about opponents for March 6–15: Deportivo Belgrano Femenino (level 7) confirmed
+          availability for day 5, Escuela de Fútbol Femenino Sur (level 5) for day 3, and the Selección
+          Universitaria Femenina (level 6) is tentative for day 8 until their spring calendar closes.
+          Dana is happy with the plan: one tough game, one easier, one in between, plus the community clinic.
+      - key: int-lak-10
+        stakeholder: st-lak-haines
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-21T09:02:00-04:00"
+        subject: "Spring tour — decision by October 31"
+        lead: l-508
+        body: |
+          Martín, we also received a quote from another operator at USD 2,750 per person. I will decide by
+          October 31, after the athletics budget meeting on October 28. Please send the formal proposal with
+          exactly what is included and the cancellation terms so I can compare like for like; once I sign, the
+          PO and the enrollment fees go out together. — Robert Haines
+      - key: int-lak-11
+        stakeholder: st-lak-whitfield
+        channel: chat
+        direction: inbound
+        occurred_at: "2026-10-22T07:40:00-03:00"
+        subject: Website chat — formal proposal for Robert
+        lead: l-508
+        body: |
+          Dana (web chat): Hi again! Robert needs the formal proposal for the October 28 budget meeting —
+          Buenos Aires, March 6–15, 24 travelers, same plan we discussed. Can you send it today?
+          IGS concierge (AI): Absolutely. I've drafted proposal IGS-2711 (USD 2,890 per person) and an ops
+          coordinator is reviewing it now; you'll get it by email as soon as it's approved.
+      - key: int-lak-12
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-22T08:10:00-03:00"
+        subject: Propuesta IGS-2711 en aprobación
+        lead: l-508
+        body: |
+          El agente de ventas armó la propuesta IGS-2711 desde el chat de Dana: Buenos Aires 6–15/3/2027,
+          24 viajeros, USD 2.890 por persona (USD 69.360). Está pendiente la aprobación de ops para enviarla a
+          Dana con copia a Haines. Si sale hoy llega a la reunión del 28/10 y destrabamos la inscripción. — Lucía
+    facts:
+      - key: fact-lak-decider
+        kind: decision
+        statement: Robert Haines (Sr. Associate AD) is the final decision maker and signs contracts and purchase orders.
+        confidence: 0.95
+        source: int-lak-02
+        valid_from: "2026-09-02"
+      - key: fact-lak-hold-overdue
+        kind: risk
+        severity: high
+        due_date: "2026-10-31"
+        statement: The team's enrollment fees (24 × US$95 = US$2,280) were due October 15 and have not been paid; the hotel releases the March blocks on October 31.
+        confidence: 0.9
+        source: int-lak-07
+        valid_from: "2026-10-16"
+      - key: fact-lak-competitor
+        kind: budget
+        statement: Haines received a competitor quote at USD 2,750 per person; our proposal is USD 2,890 per person.
+        confidence: 0.9
+        source: int-lak-10
+        valid_from: "2026-10-21"
+      - key: fact-lak-decision-date
+        kind: commitment
+        due_date: "2026-10-31"
+        statement: Haines will decide by October 31 after the October 28 budget meeting and needs the formal proposal with inclusions and cancellation terms.
+        confidence: 0.9
+        source: int-lak-10
+        valid_from: "2026-10-21"
+      - key: fact-lak-must-haves
+        kind: preference
+        statement: Coach Whitfield wants at least one tough opponent, one easier game and a community service activity.
+        confidence: 0.85
+        source: int-lak-01
+        valid_from: "2026-08-25"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  - key: acc-northfield
+    name: Northfield College
+    kind: university
+    country: USA
+    state: Minnesota
+    city: Northfield Falls
+    sport_programs: [mens_soccer]
+    tier: B
+    owner: lucia.fernandez
+    status: active
+    health: green
+    trips: [t-2709]
+    leads: [l-510]
+    stakeholders:
+      - key: st-nor-mitchell
+        name: Ryan Mitchell
+        title: Head Coach, Men's Soccer
+        role: coach
+        influence: 4
+        sentiment: positive
+        email: rmitchell@northfield.example
+        phone: "+1 507 555 0151"
+        preferred_channel: whatsapp
+        notes: On tour now. Very hands-on with the match program.
+      - key: st-nor-delaney
+        name: Chris Delaney
+        title: Assistant Coach
+        role: assistant_coach
+        influence: 2
+        sentiment: positive
+        email: cdelaney@northfield.example
+        phone: "+1 507 555 0152"
+        preferred_channel: whatsapp
+        notes: Day-to-day contact during the tour.
+      - key: st-nor-park
+        name: Susan Park
+        title: Director of Athletics
+        role: decision_maker
+        influence: 5
+        sentiment: positive
+        email: spark@northfield.example
+        preferred_channel: email
+        notes: Approved the trip; stays home. Wants a short post-tour report for the board.
+      - key: st-nor-gorman
+        name: Paul Gorman
+        title: Team Parent Liaison
+        role: parent_liaison
+        influence: 2
+        sentiment: neutral
+        email: pgorman.parent@northfield.example
+        preferred_channel: email
+        notes: Relays updates to parents; asked for daily photos.
+    interactions:
+      - key: int-nor-01
+        stakeholder: st-nor-mitchell
+        channel: chat
+        direction: inbound
+        occurred_at: "2026-03-04T21:10:00-03:00"
+        subject: Website chat — first inquiry
+        lead: l-510
+        body: |
+          Coach: Hi, we're a D3 men's program, pretty strong this year. Looking at Argentina in October,
+          fall break, about 10 days.
+          IGS concierge: Great! How many travelers, and how would you rate your level?
+          Coach: 23 players, 3 staff. We'd like games that actually push us, not exhibitions.
+          IGS concierge: Noted — I'll match opponents at level 6–8 and include one academy side.
+      - key: int-nor-02
+        stakeholder: st-nor-park
+        channel: email
+        direction: inbound
+        occurred_at: "2026-04-15T10:00:00-05:00"
+        subject: Approval to proceed
+        lead: l-510
+        body: |
+          Martín, I've approved the October tour for Men's Soccer at USD 2,790 per person for 26 travelers.
+          We'll pay in full in August to use this fiscal year's budget. Please send a short post-tour summary
+          I can share with our board. — Susan Park, Director of Athletics
+      - key: int-nor-03
+        stakeholder: st-nor-park
+        channel: email
+        direction: inbound
+        occurred_at: "2026-08-14T15:22:00-05:00"
+        subject: Paid in full
+        trip: t-2709
+        body: |
+          Payment of USD 72,540 sent today — paid in full. — Northfield College Business Office on behalf of Susan Park
+      - key: int-nor-04
+        stakeholder: st-nor-gorman
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-02T19:00:00-05:00"
+        subject: Parent questions
+        trip: t-2709
+        body: |
+          Parents are asking: (1) will there be daily photos, (2) can families send care packages to the
+          hotel, (3) what is the emergency number. Could you send something I can forward? — Paul
+      - key: int-nor-05
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-18T13:40:00-03:00"
+        subject: Llegada con demora
+        trip: t-2709
+        body: |
+          El vuelo llegó 3 h tarde a Ezeiza. El micro esperó sin costo extra. Movimos el entrenamiento del día 1
+          a la mañana del día 2. Todo bien con el grupo. — Lucía
+      - key: int-nor-06
+        stakeholder: st-nor-delaney
+        channel: whatsapp
+        direction: inbound
+        occurred_at: "2026-10-19T17:05:00-03:00"
+        subject: Player injury
+        trip: t-2709
+        body: |
+          Chris: One of our players rolled his ankle at training. Can someone take him to get it checked?
+          IGS (Lucía): Our tour leader is taking him to a clinic in Palermo now; travel insurance covers it.
+          Chris (later): X-ray clear, mild sprain. Out for the first match, probably back for day 6.
+      - key: int-nor-07
+        stakeholder: st-nor-mitchell
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-21T10:30:00-03:00"
+        subject: Great first game
+        trip: t-2709
+        body: |
+          Won 2-1 against Villa Urquiza — exactly the level we needed. The guys loved the post-match asado.
+          For Academia Palermo on day 6, keep it: we want the toughest game of the trip. Thanks for the
+          match report, already shared it with Susan. — Ryan
+      - key: int-nor-08
+        stakeholder: st-nor-mitchell
+        channel: whatsapp
+        direction: outbound
+        occurred_at: "2026-10-22T09:55:00-03:00"
+        subject: Day 6 kickoff change
+        trip: t-2709
+        body: |
+          IGS (Lucía): Coach, the referee crew for tomorrow's 17:00 match fell through. We can play at 18:30
+          with a full certified crew. OK for you?
+          Ryan: 18:30 works, just keep dinner after. Thanks for catching it early.
+      - key: int-nor-09
+        stakeholder: st-nor-mitchell
+        channel: call
+        direction: inbound
+        occurred_at: "2026-10-22T11:00:00-03:00"
+        subject: Referral and next year
+        trip: t-2709
+        body: |
+          Ryan mentioned he wants to come back in 2028 with a bigger squad, and that he gave our contact to
+          Coach Liam O'Connor (Maple Grove College, men's rugby), who is looking at Argentina for August 2027.
+          Ask Ryan for a short testimonial after the trip.
+    facts:
+      - key: fact-nor-paid
+        kind: status
+        statement: Northfield paid the full USD 72,540 in August; no balance outstanding.
+        confidence: 0.95
+        source: int-nor-03
+        valid_from: "2026-08-14"
+      - key: fact-nor-decider
+        kind: decision
+        statement: Susan Park (Director of Athletics) approved the trip and wants a post-tour summary for the board.
+        confidence: 0.9
+        source: int-nor-02
+        valid_from: "2026-04-15"
+      - key: fact-nor-kickoff
+        kind: decision
+        statement: Coach Mitchell agreed to move the day-6 match to 18:30 because of the referee crew issue.
+        confidence: 0.9
+        source: int-nor-08
+        valid_from: "2026-10-22"
+      - key: fact-nor-referral
+        kind: commitment
+        statement: Coach Mitchell referred Coach Liam O'Connor of Maple Grove College (rugby) and plans to return in 2028.
+        confidence: 0.8
+        source: int-nor-09
+        valid_from: "2026-10-22"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  - key: acc-riverside
+    name: Riverside FC Academy
+    kind: club
+    country: USA
+    state: California
+    city: Riverside
+    sport_programs: [boys_soccer_u17]
+    tier: B
+    owner: martin.rios
+    status: active
+    health: amber
+    trips: [t-2715]
+    leads: [l-509]
+    stakeholders:
+      - key: st-riv-vasquez
+        name: Elena Vasquez
+        title: Club Director
+        role: decision_maker
+        influence: 5
+        sentiment: positive
+        email: evasquez@riversidefc.example
+        phone: "+1 951 555 0161"
+        preferred_channel: email
+        notes: Signs for the club. Approved adding the Maracanã tour.
+      - key: st-riv-hale
+        name: Marcus Hale
+        title: Head Coach, U17 Boys
+        role: coach
+        influence: 4
+        sentiment: positive
+        email: mhale@riversidefc.example
+        phone: "+1 951 555 0162"
+        preferred_channel: whatsapp
+      - key: st-riv-reyes
+        name: Tom Reyes
+        title: Club Treasurer
+        role: finance
+        influence: 3
+        sentiment: neutral
+        email: treasurer@riversidefc.example
+        preferred_channel: email
+        notes: Collects payments from families in installments, then wires to IGS.
+      - key: st-riv-liu
+        name: Grace Liu
+        title: Team Manager / Parent Liaison
+        role: parent_liaison
+        influence: 3
+        sentiment: positive
+        email: gliu.manager@riversidefc.example
+        phone: "+1 951 555 0164"
+        preferred_channel: email
+        notes: Owns consent forms and visa paperwork tracking for the families.
+    interactions:
+      - key: int-riv-01
+        stakeholder: st-riv-vasquez
+        channel: meeting
+        direction: outbound
+        occurred_at: "2026-06-10T13:00:00-03:00"
+        subject: Contract review with the club director
+        lead: l-509
+        body: |
+          Elena Vasquez (Club Director) and Coach Hale. Rio de Janeiro, December 5–14, 22 travelers
+          (18 players U17, 4 adults), USD 3,180 per person. Elena signs for the club. Families pay the club
+          in installments; the club wires to IGS. Elena approved adding the Maracanã stadium tour.
+      - key: int-riv-02
+        stakeholder: st-riv-reyes
+        channel: email
+        direction: inbound
+        occurred_at: "2026-07-01T09:00:00-07:00"
+        subject: Enrollment fees and first installments sent
+        trip: t-2715
+        body: |
+          USD 20,988 wired today: the 22 enrollment fees (22 × US$95) and the first US$500 installments as
+          families paid them. The final balance is due August 17 (110 days before departure), but families
+          pay the club in installments — can we wire the balance (USD 48,972) in two parts, the first by
+          October 21 and the rest by November 5? — Tom Reyes, Treasurer
+      - key: int-riv-03
+        stakeholder: st-riv-liu
+        channel: email
+        direction: outbound
+        occurred_at: "2026-08-20T11:00:00-03:00"
+        subject: Brazil entry requirements for your players
+        trip: t-2715
+        body: |
+          Hi Grace, a reminder that US citizens need a Brazilian electronic visa (e-visa) before travel, and
+          minors traveling without both parents need a notarized parental travel authorization. Please have
+          every family start the e-visa now; processing can take several weeks. Our guidance is not legal
+          advice — families should check official sources.
+      - key: int-riv-04
+        stakeholder: st-riv-liu
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-14T18:30:00-07:00"
+        subject: Visa status
+        trip: t-2715
+        body: |
+          Update: 16 of 22 travelers have their e-visa approved. 6 are pending (5 players, 1 parent chaperone);
+          two families only applied last week. Consent forms are 100% collected.
+      - key: int-riv-05
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-15T10:00:00-03:00"
+        subject: Riesgo visas Riverside
+        trip: t-2715
+        body: |
+          6 e-visas pendientes a 7 semanas de viajar. Si alguna no sale, ese viajero no puede embarcar: hoy
+          (109 a 45 días) se reembolsa menos US$95, los no reembolsables y el 50% del programa, y a 44 días o
+          menos no hay reembolso. Pedir a Grace estado semanal y avisar a Elena. — Martín
+      - key: int-riv-06
+        stakeholder: st-riv-reyes
+        channel: email
+        direction: outbound
+        occurred_at: "2026-10-21T09:25:00-03:00"
+        subject: Balance reminder
+        trip: t-2715
+        body: |
+          Reminder approved by Martín Ríos: first balance wire due today per the exception we agreed (the
+          standard final balance date was August 17; late fees waived). Remaining after both wires: USD 0.
+          Thank you, Tom.
+      - key: int-riv-07
+        stakeholder: st-riv-reyes
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-21T17:45:00-07:00"
+        subject: "RE: Balance reminder"
+        trip: t-2715
+        body: |
+          First wire of USD 30,000 sent this afternoon. Families are at about 70% paid; the remaining
+          USD 18,972 will follow by November 5 as planned.
+      - key: int-riv-08
+        stakeholder: st-riv-hale
+        channel: whatsapp
+        direction: inbound
+        occurred_at: "2026-10-22T08:10:00-03:00"
+        subject: Opponents
+        trip: t-2715
+        body: |
+          Marcus: Saw Escolinha Barra on the schedule, love it. Can we get one more game vs a Brazilian side
+          instead of the beach futevôlei afternoon? The boys want minutes.
+          IGS (Martín): Checking availability; it may change the price slightly, I'll confirm with Elena first.
+    facts:
+      - key: fact-riv-decider
+        kind: decision
+        statement: Elena Vasquez (Club Director) signs for Riverside FC Academy and approves scope changes.
+        confidence: 0.95
+        source: int-riv-01
+        valid_from: "2026-06-10"
+      - key: fact-riv-visas
+        kind: risk
+        statement: 6 of 22 travelers' Brazilian e-visas were still pending on October 14.
+        confidence: 0.9
+        source: int-riv-04
+        valid_from: "2026-10-14"
+      - key: fact-riv-payment-plan
+        kind: commitment
+        statement: First balance wire of USD 30,000 sent October 21; remaining USD 18,972 due by November 5.
+        confidence: 0.9
+        source: int-riv-07
+        valid_from: "2026-10-21"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  - key: acc-brookfield
+    name: Brookfield University
+    kind: university
+    country: USA
+    state: Ohio
+    city: Brookfield Heights
+    sport_programs: [womens_soccer]
+    tier: A
+    owner: sofia.paz
+    status: prospect
+    health: green
+    trips: []
+    leads: [l-501]
+    stakeholders:
+      - key: st-bro-okafor
+        name: Sarah Okafor
+        title: Head Coach, Women's Soccer
+        role: champion
+        influence: 4
+        sentiment: positive
+        email: sokafor@brookfield.example
+        phone: "+1 330 555 0171"
+        preferred_channel: email
+      - key: st-bro-reed
+        name: Jamal Reed
+        title: Associate Athletic Director, Sport Administration
+        role: decision_maker
+        influence: 5
+        sentiment: unknown
+        email: jreed@brookfield.example
+        preferred_channel: email
+        notes: Decides at the November budget meeting. We have not spoken with him yet.
+      - key: st-bro-chen
+        name: Laura Chen
+        title: Compliance Officer
+        role: compliance
+        influence: 4
+        sentiment: neutral
+        email: lchen@brookfield.example
+        preferred_channel: email
+        notes: Must approve any foreign tour before a contract is signed.
+      - key: st-bro-silva
+        name: Nate Silva
+        title: Assistant Coach
+        role: assistant_coach
+        influence: 2
+        sentiment: positive
+        email: nsilva@brookfield.example
+        preferred_channel: email
+    interactions:
+      - key: int-bro-05
+        stakeholder: st-bro-okafor
+        channel: meeting
+        direction: inbound
+        occurred_at: "2026-01-16T11:00:00-05:00"
+        subject: Coaching convention — booth conversation
+        body: |
+          Sarah Okafor stopped by the IGS booth at a national coaching convention. Interested in an
+          international tour "in a year or two", likes Argentina for the playing style. No dates yet.
+          Asked for a brochure and sample itineraries.
+      - key: int-bro-06
+        stakeholder: st-bro-okafor
+        channel: email
+        direction: outbound
+        occurred_at: "2026-02-10T10:00:00-03:00"
+        subject: Sample itineraries for Brookfield
+        body: |
+          Hi Sarah, great to meet you at the convention. Attached are two sample 10-day itineraries
+          (Buenos Aires soccer, Rio de Janeiro soccer) and our price ranges: Buenos Aires USD 2,400–3,200
+          per person depending on season and experiences. — Sofía
+      - key: int-bro-01
+        stakeholder: st-bro-okafor
+        channel: chat
+        direction: inbound
+        occurred_at: "2026-10-21T22:05:00-03:00"
+        subject: Website chat — spring tour
+        lead: l-501
+        body: |
+          Coach: Hi, Brookfield Women's Soccer, D1. Thinking Buenos Aires in March, spring break, 10 days.
+          IGS concierge: Great! How many travelers and what level of competition do you want?
+          Coach: 22 players and 3 staff. Three hard games and one easier one. Video analysis matters a lot to us.
+          IGS concierge: Got it. Do you have a budget per person in mind?
+          Coach: Around 2,900 all-in without flights. We also have a quote for Spain at 3,100.
+      - key: int-bro-02
+        stakeholder: st-bro-okafor
+        channel: call
+        direction: outbound
+        occurred_at: "2026-10-22T09:20:00-03:00"
+        subject: Qualification call
+        lead: l-501
+        body: |
+          Sofía spoke with Sarah. Decision process: Jamal Reed (Associate AD) decides at the athletics budget
+          meeting on November 15. Compliance (Laura Chen) must approve the foreign tour before signing;
+          their internal form is due December 1. Competing option: a Spain tour from another operator at
+          USD 3,100 per person — Sarah prefers Argentina for the level of competition but price and the video
+          package will decide it. Next step: proposal this week, then a call with Jamal before November 15.
+      - key: int-bro-03
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-22T09:45:00-03:00"
+        subject: Propuesta lista para aprobación
+        lead: l-501
+        body: |
+          El agente armó la propuesta IGS-2731: 8–17 marzo 2027, 25 viajeros, USD 2.890 pp, con el paquete de
+          video análisis incluido. Pendiente aprobación de ops para enviarla. Pedir reunión con Jamal Reed
+          antes del 15/11 — es quien decide y todavía no lo conocemos. — Sofía
+      - key: int-bro-04
+        stakeholder: st-bro-chen
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-22T10:30:00-04:00"
+        subject: Foreign tour documentation
+        lead: l-501
+        body: |
+          Coach Okafor forwarded your information. For any foreign tour I need the itinerary, the list of
+          opponents, proof of insurance and confirmation that no recruiting contact will happen during the
+          trip. Please send them with the proposal so I can review before the November 15 meeting.
+          — Laura Chen, Compliance
+      - key: int-bro-07
+        stakeholder: st-bro-silva
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-22T11:15:00-04:00"
+        subject: Video analysis package
+        lead: l-501
+        body: |
+          Hi, Nate here (assistant coach, I run our video). For the analysis package: how many camera angles,
+          do we get the raw files the same night, and can the clips be exported to our video platform?
+          Same-night footage is a must for us to do review sessions on tour.
+      - key: int-bro-08
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-22T12:00:00-03:00"
+        subject: Checklist de compliance Brookfield
+        lead: l-501
+        body: |
+          Laura Chen pide: itinerario, lista de rivales, certificado de seguro y confirmación de que no hay
+          contacto de reclutamiento durante la gira. Mandarlo junto con la propuesta. Nate quiere footage la
+          misma noche: confirmar con el proveedor de video antes de prometerlo. — Sofía
+    facts:
+      - key: fact-bro-decider
+        kind: decision
+        statement: Jamal Reed (Associate AD) decides at the November 15 budget meeting; compliance must approve first.
+        confidence: 0.85
+        source: int-bro-02
+        valid_from: "2026-10-22"
+      - key: fact-bro-competitor
+        kind: risk
+        statement: Brookfield has a competing Spain tour quote at USD 3,100 per person.
+        confidence: 0.85
+        source: int-bro-01
+        valid_from: "2026-10-21"
+      - key: fact-bro-budget
+        kind: budget
+        statement: Budget target around USD 2,900 per person excluding flights; video analysis is a must.
+        confidence: 0.85
+        source: int-bro-01
+        valid_from: "2026-10-21"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  - key: acc-westbrook
+    name: Westbrook College
+    kind: university
+    country: USA
+    state: Pennsylvania
+    city: Westbrook
+    sport_programs: [womens_field_hockey]
+    tier: B
+    owner: lucia.fernandez
+    status: prospect
+    health: amber
+    trips: [t-2720]
+    leads: [l-505]
+    stakeholders:
+      - key: st-wes-lawson
+        name: Emma Lawson
+        title: Head Coach, Field Hockey
+        role: coach
+        influence: 4
+        sentiment: positive
+        email: elawson@westbrook.example
+        phone: "+1 610 555 0181"
+        preferred_channel: email
+      - key: st-wes-moore
+        name: Rachel Moore
+        title: Director of Athletics
+        role: decision_maker
+        influence: 5
+        sentiment: neutral
+        email: rmoore@westbrook.example
+        preferred_channel: email
+        notes: Focused on safety and insurance.
+      - key: st-wes-novak
+        name: Peter Novak
+        title: Compliance Coordinator
+        role: compliance
+        influence: 3
+        sentiment: unknown
+        email: pnovak@westbrook.example
+        preferred_channel: email
+      - key: st-wes-tran
+        name: Kim Tran
+        title: Business Manager, Athletics
+        role: finance
+        influence: 3
+        sentiment: neutral
+        email: ktran@westbrook.example
+        preferred_channel: email
+    interactions:
+      - key: int-wes-06
+        stakeholder: st-wes-lawson
+        channel: chat
+        direction: inbound
+        occurred_at: "2026-09-22T20:30:00-03:00"
+        subject: Website chat — field hockey
+        lead: l-505
+        body: |
+          Coach: Do you do field hockey tours? Westbrook College women's team, spring break 2027.
+          IGS concierge: Yes — Buenos Aires has a strong field hockey culture. How many travelers and what level?
+          Coach: About 17 players and 3 staff, solid D3 program. We need water-based turf.
+          IGS concierge: Noted. I'll prepare options with Hockey Club Olivos, which plays on water-based turf.
+      - key: int-wes-01
+        stakeholder: st-wes-lawson
+        channel: email
+        direction: outbound
+        occurred_at: "2026-10-08T12:00:00-03:00"
+        subject: "Your field hockey tour proposal — IGS-2720"
+        lead: l-505
+        trip: t-2720
+        body: |
+          Hi Emma, here is proposal IGS-2720: Buenos Aires, March 8–17, 2027, 20 travelers, USD 2,640 per
+          person. Two matches including Hockey Club Olivos (level 7) on water-based turf, training sessions,
+          La Bombonera, Tigre Delta and tango night. — Lucía
+      - key: int-wes-02
+        stakeholder: st-wes-lawson
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-14T19:20:00-04:00"
+        subject: "RE: proposal — questions"
+        lead: l-505
+        trip: t-2720
+        body: |
+          Loved Hockey Club Olivos. Two questions: could we get a third match? And our budget is closer to
+          USD 2,500 per person — anything we could take out? I'm also looking at a Netherlands trip, honestly,
+          but Argentina is my first choice.
+      - key: int-wes-03
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-16T11:10:00-03:00"
+        subject: Opciones de precio Westbrook
+        lead: l-505
+        trip: t-2720
+        body: |
+          Opción: sacar Tigre (USD 45) y la clase de tango (USD 55) y sumar un tercer partido (+USD 6 de
+          árbitros). Queda en ~USD 2.550. No bajar de 2.500: margen mínimo. Competencia: gira a Holanda. — Lucía
+      - key: int-wes-04
+        stakeholder: st-wes-lawson
+        channel: email
+        direction: outbound
+        occurred_at: "2026-10-17T10:00:00-03:00"
+        subject: Revised option at USD 2,550
+        lead: l-505
+        trip: t-2720
+        body: |
+          Emma, a revised option: three matches, without the Tigre trip and the tango class, at USD 2,550
+          per person. Everything else stays the same. Happy to jump on a call with your AD.
+      - key: int-wes-05
+        stakeholder: st-wes-lawson
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-20T08:45:00-04:00"
+        subject: AD wants safety plan
+        lead: l-505
+        trip: t-2720
+        body: |
+          The revised option works for me. Rachel Moore (our AD) will decide in early November and wants to see
+          the insurance coverage and a safety plan for the trip before then. Peter Novak in compliance will need
+          the itinerary too.
+      - key: int-wes-07
+        stakeholder: st-wes-moore
+        channel: email
+        direction: outbound
+        occurred_at: "2026-10-21T10:00:00-03:00"
+        subject: Safety plan and insurance for the Buenos Aires tour
+        lead: l-505
+        trip: t-2720
+        body: |
+          Dear Ms. Moore, as requested by Coach Lawson, attached are our safety plan (24/7 bilingual tour leader,
+          private transport, hotels in Palermo), the medical insurance coverage summary and the revised itinerary
+          at USD 2,550 per person. Copying Peter Novak for compliance. — Lucía Fernández
+      - key: int-wes-08
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-22T12:30:00-03:00"
+        subject: Westbrook — seguimiento
+        lead: l-505
+        trip: t-2720
+        body: |
+          Sin respuesta de Rachel Moore todavía. Emma está a favor; la decisión es de Rachel a principios de
+          noviembre. Riesgo: la gira a Holanda. Hacer seguimiento el 27/10 y ofrecer llamada con Rachel. — Lucía
+    facts:
+      - key: fact-wes-decider
+        kind: decision
+        statement: Rachel Moore (Director of Athletics) decides in early November after reviewing insurance and a safety plan.
+        confidence: 0.85
+        source: int-wes-05
+        valid_from: "2026-10-20"
+      - key: fact-wes-price
+        kind: budget
+        statement: Coach Lawson accepted the revised option at USD 2,550 per person with three matches.
+        confidence: 0.8
+        source: int-wes-05
+        valid_from: "2026-10-20"
+      - key: fact-wes-competitor
+        kind: risk
+        statement: Westbrook is also considering a Netherlands trip.
+        confidence: 0.8
+        source: int-wes-02
+        valid_from: "2026-10-14"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  - key: acc-summit
+    name: Summit Elite SC
+    kind: club
+    country: USA
+    state: Colorado
+    city: Denver
+    sport_programs: [girls_soccer_u15, girls_soccer_u16]
+    tier: B
+    owner: lucia.fernandez
+    status: past
+    health: green
+    trips: [t-2698]
+    leads: [l-497]
+    stakeholders:
+      - key: st-sum-daniels
+        name: Mike Daniels
+        title: Club Director
+        role: decision_maker
+        influence: 5
+        sentiment: positive
+        email: mdaniels@summitelite.example
+        phone: "+1 303 555 0191"
+        preferred_channel: email
+        notes: Board approves big trips; next board meeting in December.
+      - key: st-sum-kim
+        name: Laura Kim
+        title: Head Coach, U15/U16 Girls
+        role: coach
+        influence: 4
+        sentiment: positive
+        email: lkim@summitelite.example
+        phone: "+1 303 555 0192"
+        preferred_channel: whatsapp
+      - key: st-sum-lopez
+        name: Sandra Lopez
+        title: Parent Liaison
+        role: parent_liaison
+        influence: 3
+        sentiment: neutral
+        email: slopez.parent@summitelite.example
+        preferred_channel: email
+        notes: Raised the bus delay complaint on behalf of parents.
+      - key: st-sum-park
+        name: Jim Park
+        title: Club Treasurer
+        role: finance
+        influence: 3
+        sentiment: neutral
+        email: treasurer@summitelite.example
+        preferred_channel: email
+    interactions:
+      - key: int-sum-01
+        stakeholder: st-sum-lopez
+        channel: email
+        direction: inbound
+        occurred_at: "2026-07-03T21:00:00-03:00"
+        subject: Bus delay on day 2
+        trip: t-2698
+        body: |
+          Several parents were upset that the bus to the training complex was 90 minutes late on day 2 and the
+          girls waited in the hotel lobby. Can you tell us what happened and make sure it doesn't repeat?
+      - key: int-sum-02
+        stakeholder: st-sum-daniels
+        channel: email
+        direction: outbound
+        occurred_at: "2026-07-05T10:00:00-03:00"
+        subject: Apology and credit
+        trip: t-2698
+        body: |
+          Mike, the bus company had a mechanical failure and their backup arrived late. We have switched to a
+          dedicated vehicle with a standby for the rest of the tour. As an apology we are crediting
+          USD 500 to the club. — Lucía Fernández (approved by Martín Ríos)
+      - key: int-sum-03
+        stakeholder: st-sum-daniels
+        channel: meeting
+        direction: outbound
+        occurred_at: "2026-07-10T12:00:00-03:00"
+        subject: Post-tour debrief
+        trip: t-2698
+        body: |
+          Debrief with Mike Daniels and Laura Kim. Overall rating 9/10. Highlights: Escuela de Fútbol Femenino
+          Sur match, the community clinic, the tango night. Only issue: the day-2 bus delay, considered resolved
+          after the USD 500 credit. Mike wants to repeat in 2027.
+      - key: int-sum-04
+        stakeholder: st-sum-kim
+        channel: email
+        direction: inbound
+        occurred_at: "2026-08-12T09:00:00-06:00"
+        subject: Survey results
+        trip: t-2698
+        body: |
+          Our parent and player survey came back at 4.7/5. Players asked for "more games against Argentine
+          clubs" next time. — Laura
+      - key: int-sum-05
+        stakeholder: st-sum-daniels
+        channel: email
+        direction: inbound
+        occurred_at: "2026-09-15T16:30:00-06:00"
+        subject: 2027 idea — Brazil and the Women's World Cup
+        body: |
+          We're thinking about taking our U16 girls to Brazil in summer 2027 around the Women's World Cup, and
+          some families want to come along. Do you do family packages? Rough group: 24 players plus maybe
+          30 family members.
+      - key: int-sum-06
+        stakeholder: st-sum-daniels
+        channel: call
+        direction: outbound
+        occurred_at: "2026-10-12T15:00:00-03:00"
+        subject: 2027 Brazil — budget and decision
+        body: |
+          Lucía and Mike. Budget is the concern: families want a payment plan in four installments. The board
+          decides at its December meeting. Mike also introduced Coach Diego Alvarez (Cedar Ridge HS) who wants
+          Costa Rica in June 2027. Next step: send a Brazil 2027 family package draft before December 1.
+      - key: int-sum-07
+        stakeholder: st-sum-park
+        channel: email
+        direction: inbound
+        occurred_at: "2026-10-16T11:00:00-06:00"
+        subject: Payment plan question
+        body: |
+          For a 2027 trip, could families skip the US$500 manual installments and pay monthly instead if we
+          enroll before December 31? Our board will ask. — Jim Park, Treasurer
+      - key: int-sum-08
+        channel: note
+        direction: internal
+        occurred_at: "2026-10-20T17:00:00-03:00"
+        subject: Plan de pago automático para Summit 2027
+        body: |
+          Martín aprobó que Summit Elite 2027 use el plan automático de los términos (mínimo tres pagos
+          mensuales, agendados entre el 1 y el 26 de cada mes) si se inscriben antes del 31/12. El fee de
+          inscripción de US$95 por viajero se mantiene y el saldo final vence 110 días antes de viajar.
+          Responderle a Jim Park y sumarlo al borrador del paquete familiar. — Lucía
+    facts:
+      - key: fact-sum-nps
+        kind: status
+        statement: Summit Elite rated the July 2026 tour 9/10; parent and player survey 4.7/5.
+        confidence: 0.9
+        source: int-sum-03
+        valid_from: "2026-07-10"
+      - key: fact-sum-credit
+        kind: decision
+        statement: IGS credited USD 500 to the club for the day-2 bus delay; considered resolved.
+        confidence: 0.9
+        source: int-sum-02
+        valid_from: "2026-07-05"
+      - key: fact-sum-2027
+        kind: commitment
+        statement: The board decides on a Brazil 2027 family trip in December; IGS owes a family package draft before December 1.
+        confidence: 0.8
+        source: int-sum-06
+        valid_from: "2026-10-12"

@@ -1,0 +1,33 @@
+# Builds and pushes the app images (core, worker, ops) — models changes rarely, see cloudbuild.yaml natively on linux/amd64.
+#   gcloud builds submit --config scripts/deploy/cloudbuild.yaml \
+#     --substitutions=_REGION=us-central1,_REPO=igs-demo,_TAG=sha-xxxx .
+# Tags are immutable in Artifact Registry: images are only ever tagged sha-<commit>.
+# The upload context is filtered by .gcloudignore (no node_modules, venvs or model weights).
+substitutions:
+  _REGION: us-central1
+  _REPO: igs-demo
+  _TAG: manual
+options:
+  machineType: E2_HIGHCPU_8
+  env: ["DOCKER_BUILDKIT=1"]
+timeout: 3600s
+steps:
+  - id: core
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    args: ["build", "-f", "services/core/Dockerfile",
+           "-t", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/igs-core:${_TAG}", "."]
+  - id: worker
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    args: ["build", "-f", "services/worker/Dockerfile",
+           "-t", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/igs-worker:${_TAG}", "."]
+  - id: ops
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    args: ["build", "-f", "scripts/deploy/ops.Dockerfile",
+           "-t", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/igs-ops:${_TAG}", "."]
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/igs-core:${_TAG}
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/igs-worker:${_TAG}
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/igs-ops:${_TAG}

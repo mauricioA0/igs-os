@@ -1,0 +1,88 @@
+# Dataplane V2 (Autopilot default) enforces these. Default-deny ingress everywhere, then open
+# only what each path needs. Egress stays open (Cloud SQL, model providers, Cloud Run).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: temporal
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+# Temporal services talk to each other (membership + RPC ports).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-internal
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: temporal }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: {}
+---
+# Frontend gRPC: workers, KEDA's operator, and the internal LB (Cloud Run egress subnet).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-frontend-clients
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: temporal, app.kubernetes.io/component: frontend }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: igs-workers }
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: keda }
+        - ipBlock: { cidr: 10.10.0.0/16 } # replaced per env: Cloud Run Direct VPC egress subnet
+      ports:
+        - { protocol: TCP, port: 7233 }
+---
+# Web UI: only Google's load balancer / health-check ranges (IAP sits in front of the GCLB).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-web-from-gclb
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: temporal, app.kubernetes.io/component: web }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - ipBlock: { cidr: 35.191.0.0/16 }
+        - ipBlock: { cidr: 130.211.0.0/22 }
+      ports:
+        - { protocol: TCP, port: 8080 }
+---
+# Managed Prometheus scrapes Temporal metrics on 9090.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-metrics-from-gmp
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: temporal }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: gmp-system }
+      ports:
+        - { protocol: TCP, port: 9090 }
+---
+# Workers serve nothing.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: igs-workers
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]

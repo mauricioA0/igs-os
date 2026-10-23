@@ -1,0 +1,34 @@
+[project]
+name = "igs-common"
+version = "0.0.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "alembic>=1.20.1",
+    "asyncpg>=0.32.0",
+    "cel-python>=0.5.0",
+    "cryptography>=50.0.2",
+    "google-cloud-vectorsearch>=0.11.5",
+    "httpx>=0.28.1",
+    "openai>=3.37.0",
+    "openpyxl>=3.1",
+    "opentelemetry-api>=1.45.1",
+    "pgvector>=0.3",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.16.1",
+    "pypdf>=6.21.2",
+    "python-docx>=1.2.0",
+    "pyyaml>=6.0.3",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "structlog>=26.1.0",
+    "temporalio>=1.34.0",
+]
+
+[project.scripts]
+igs-import = "igs_common.importer.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/igs_common"]

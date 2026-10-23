@@ -1,0 +1,160 @@
+{
+  "device": "cpu",
+  "n_docs": 40,
+  "n_queries": 42,
+  "results": [
+    {
+      "name": "multilingual-e5-small",
+      "params_m": 118.0,
+      "dims": 384,
+      "recall@1": 0.905,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.964,
+      "mrr_en": 0.984,
+      "mrr_es": 0.909,
+      "query_ms_p50": 9.2,
+      "index_s": 0.18,
+      "notes": "cheap baseline",
+      "top1_misses": [
+        "Un equipo se baja a 30 días de la salida, ¿qué les cobramos?",
+        "Can parents come along on the tour?",
+        "Un coach pregunta si necesitan visa para Argentina con pasaporte americano"
+      ]
+    },
+    {
+      "name": "Qwen3-Embedding-0.6B (default instruction)",
+      "params_m": 596.0,
+      "dims": 1024,
+      "recall@1": 0.833,
+      "recall@3": 0.952,
+      "recall@5": 1.0,
+      "mrr": 0.91,
+      "mrr_en": 0.904,
+      "mrr_es": 0.927,
+      "query_ms_p50": 103.1,
+      "index_s": 1.86,
+      "notes": "model card's generic web-search instruction",
+      "top1_misses": [
+        "Un equipo se baja a 30 días de la salida, ¿qué les cobramos?",
+        "Can parents come along on the tour?",
+        "Is Buenos Aires safe for a group of 17 year olds?",
+        "Ballpark cost per player for Buenos Aires?",
+        "Two of our players are celiac",
+        "Can the team watch a professional game live?"
+      ]
+    },
+    {
+      "name": "Qwen3-Embedding-0.6B (task instruction)",
+      "params_m": 596.0,
+      "dims": 1024,
+      "recall@1": 0.762,
+      "recall@3": 0.976,
+      "recall@5": 0.976,
+      "mrr": 0.877,
+      "mrr_en": 0.871,
+      "mrr_es": 0.894,
+      "query_ms_p50": 124.9,
+      "index_s": 1.89,
+      "notes": "instruction written for this domain",
+      "top1_misses": [
+        "How much do we need to pay upfront to lock the trip?",
+        "¿Cuándo vence el saldo del viaje?",
+        "Can we pay with a credit card? Is there a surcharge?",
+        "Un equipo se baja a 30 días de la salida, ¿qué les cobramos?",
+        "Is Buenos Aires safe for a group of 17 year olds?",
+        "Ballpark cost per player for Buenos Aires?",
+        "Two of our players are celiac",
+        "strong women's soccer opponent in Buenos Aires for a D1 college team",
+        "recovery day with thermal pools"
+      ]
+    },
+    {
+      "name": "BGE-M3 (dense)",
+      "params_m": 569.0,
+      "dims": 1024,
+      "recall@1": 0.905,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.964,
+      "mrr_en": 0.984,
+      "mrr_es": 0.909,
+      "query_ms_p50": 137.1,
+      "index_s": 1.93,
+      "notes": "",
+      "top1_misses": [
+        "Un equipo se baja a 30 días de la salida, ¿qué les cobramos?",
+        "Un coach pregunta si necesitan visa para Argentina con pasaporte americano",
+        "strong women's soccer opponent in Buenos Aires for a D1 college team"
+      ]
+    },
+    {
+      "name": "BGE-M3 (sparse)",
+      "params_m": 569.0,
+      "dims": null,
+      "recall@1": 0.583,
+      "recall@3": 0.738,
+      "recall@5": 0.786,
+      "mrr": 0.69,
+      "mrr_en": 0.734,
+      "mrr_es": 0.565,
+      "query_ms_p50": 137.1,
+      "index_s": 1.93,
+      "notes": "learned lexical weights",
+      "top1_misses": [
+        "What happens if we have to cancel two months before leaving?",
+        "Un equipo se baja a 30 días de la salida, ¿qué les cobramos?",
+        "Are flights part of the package?",
+        "¿El precio incluye hotel, micro y desayuno?",
+        "Can parents come along on the tour?",
+        "¿Quién acompaña al grupo durante la noche?",
+        "How do you make sure games aren't blowouts?",
+        "How many games would we play on a 10 day trip?",
+        "Two of our players are celiac",
+        "strong women's soccer opponent in Buenos Aires for a D1 college team",
+        "rival femenino sub-15 tranquilo en Buenos Aires",
+        "a men's college team in Argentina, friendly, with a barbecue after the game",
+        "equipo femenino competitivo en Río de Janeiro",
+        "Can the team watch a professional game live?",
+        "recovery day with thermal pools",
+        "something fun on the beach in Rio",
+        "sesiones de entrenamiento con técnicos locales"
+      ]
+    },
+    {
+      "name": "BGE-M3 (dense + 0.3·sparse)",
+      "params_m": 569.0,
+      "dims": 1024,
+      "recall@1": 0.929,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.976,
+      "mrr_en": 0.968,
+      "mrr_es": 1.0,
+      "query_ms_p50": 137.1,
+      "index_s": 1.93,
+      "notes": "one forward pass yields both",
+      "top1_misses": [
+        "Can parents come along on the tour?",
+        "a men's college team in Argentina, friendly, with a barbecue after the game"
+      ]
+    },
+    {
+      "name": "BGE-M3 (dense + 0.3·sparse) → bge-reranker-v2-m3",
+      "params_m": 568.0,
+      "dims": 1024,
+      "recall@1": 0.952,
+      "recall@3": 0.976,
+      "recall@5": 1.0,
+      "mrr": 0.981,
+      "mrr_en": 0.974,
+      "mrr_es": 1.0,
+      "query_ms_p50": 543.5,
+      "index_s": 0.0,
+      "notes": "rerank top-10",
+      "top1_misses": [
+        "Ballpark cost per player for Buenos Aires?"
+      ]
+    }
+  ]
+}

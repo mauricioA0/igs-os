@@ -1,0 +1,59 @@
+[
+  {
+    "id": "01-landing",
+    "title": "IGS OS",
+    "text": "This is IGS OS: an operating system for a sports tour operator. Agents and durable flows do the work, and people stay in control. Every client you'll see is fictional."
+  },
+  {
+    "id": "02-today",
+    "title": "Today",
+    "text": "Ops starts here, with everything that needs a person, ranked. Lakeshore University is red: enrollment fees are a week overdue, and the hotel releases its room blocks in nine days."
+  },
+  {
+    "id": "03-account",
+    "title": "Account 360",
+    "text": "Account 360 shows why it's red, who decides, and what was promised. Every line cites the email, call or chat it came from. Health comes from rules, not from the model."
+  },
+  {
+    "id": "04-copilot",
+    "title": "Copilot",
+    "text": "Ask the copilot about the client. It uses the same tools as our MCP server, answers with sources, and says so when it doesn't know.",
+    "fit": "clip"
+  },
+  {
+    "id": "05-approvals",
+    "title": "Human approval",
+    "text": "The sales agent drafted the proposal, but it can't send it. Ops sees exactly what will go out, bound to a fingerprint. Approve, and the flow continues."
+  },
+  {
+    "id": "06-editor",
+    "title": "Flow editor",
+    "text": "Flows are built on a canvas, the way Voiceflow does it: blocks of steps, a step library, and a test panel to try a flow before publishing it."
+  },
+  {
+    "id": "07-execution",
+    "title": "Durable flow",
+    "text": "This is the run behind Lakeshore's proposal, on Temporal. It waited for that approval without holding a server, and resumed the moment ops decided."
+  },
+  {
+    "id": "08-proposal",
+    "title": "What the coach receives",
+    "text": "This is what the coach receives: opponents matched to her team's level, one package price, and a way to reserve that becomes another approval for ops."
+  },
+  {
+    "id": "09-guide",
+    "title": "Guide",
+    "text": "Coaches start in a chat on the site. And on every screen, a guide bubble explains what you're looking at, in real time. It's a proof of concept, and it says so."
+  },
+  {
+    "id": "10-mcp",
+    "title": "Built for agents",
+    "text": "The same tools are open to Claude Code over MCP, with evals, end-to-end tests and accessibility checks in CI."
+  },
+  {
+    "id": "11-close",
+    "title": "IGS OS · v0",
+    "text": "IGS OS. Built with agents, for an operation run by people. Try it at igs-os dot vercel dot app.",
+    "caption": "IGS OS. Built with agents, for an operation run by people. Try it at igs-os.vercel.app."
+  }
+]

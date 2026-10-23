@@ -1,0 +1,282 @@
+# Demo roster + pre-departure document statuses (fictional people). Dates move with the demo
+# anchor like sales.yaml. Status only — never document images or passport numbers.
+# Story: Riverside U17 to Rio (IGS-2715, confirmed). The e-Visa deadline (T-60) has passed with
+# 4 players still open; an assistant coach's passport expires mid-trip (Dec 11, trip ends Dec 14).
+travelers:
+  - key: t-2715-p01
+    trip: t-2715
+    full_name: Mason Carver
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2024-01-27', valid_until: '2029-01-26'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p02
+    trip: t-2715
+    full_name: Ethan Delgado
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2023-10-15', valid_until: '2028-10-14'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p03
+    trip: t-2715
+    full_name: Liam Whitaker
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2024-11-01', valid_until: '2029-11-01'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p04
+    trip: t-2715
+    full_name: Noah Brennan
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2024-09-13', valid_until: '2029-09-12'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: {status: not_applicable, note: Both parents travel with the team}
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p05
+    trip: t-2715
+    full_name: Caleb Okafor
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2025-09-22', valid_until: '2030-09-21'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p06
+    trip: t-2715
+    full_name: Owen Lindqvist
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2024-05-01', valid_until: '2029-05-01'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p07
+    trip: t-2715
+    full_name: Lucas Navarro
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2022-02-20', valid_until: '2027-02-19'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p08
+    trip: t-2715
+    full_name: Dylan Pruitt
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2024-02-24', valid_until: '2029-02-23'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p09
+    trip: t-2715
+    full_name: Gavin Haldane
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2023-10-06', valid_until: '2028-10-05'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p10
+    trip: t-2715
+    full_name: Ryan Kessler
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2025-11-10', valid_until: '2030-11-09'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p11
+    trip: t-2715
+    full_name: Tyler Mbeki
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2024-06-08', valid_until: '2029-06-07'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p12
+    trip: t-2715
+    full_name: Jaden Ashford
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2023-04-12', valid_until: '2028-04-11'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: missing
+  - key: t-2715-p13
+    trip: t-2715
+    full_name: Miles Torrance
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2024-04-07', valid_until: '2029-04-06'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p14
+    trip: t-2715
+    full_name: Aiden Velez
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2023-10-02', valid_until: '2028-10-01'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p15
+    trip: t-2715
+    full_name: Cole Quinlan
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2023-07-04', valid_until: '2028-07-03'}
+      br_evisa: verified
+      birth_certificate: verified
+      parental_consent: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p16
+    trip: t-2715
+    full_name: Evan Strand
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2023-09-21', valid_until: '2028-09-20'}
+      br_evisa: received
+      birth_certificate: verified
+      parental_consent: requested
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p17
+    trip: t-2715
+    full_name: Logan Abernathy
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2024-07-10', valid_until: '2029-07-09'}
+      br_evisa: received
+      birth_certificate: missing
+      parental_consent: requested
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-p18
+    trip: t-2715
+    full_name: Brody Rourke
+    role: player
+    is_minor: true
+    birth_year: 2009
+    documents:
+      passport: {status: verified, valid_from: '2025-09-10', valid_until: '2030-09-09'}
+      br_evisa: requested
+      birth_certificate: verified
+      parental_consent: requested
+      travel_insurance: requested
+      emergency_contact: verified
+  - key: t-2715-p19
+    trip: t-2715
+    full_name: Isaac Castellano
+    role: player
+    is_minor: true
+    birth_year: 2010
+    documents:
+      passport: {status: verified, valid_from: '2023-06-27', valid_until: '2028-06-26'}
+      br_evisa: missing
+      birth_certificate: missing
+      parental_consent: requested
+      travel_insurance: requested
+      emergency_contact: verified
+  - key: t-2715-s1
+    trip: t-2715
+    full_name: Daniel Archer
+    role: staff
+    is_minor: false
+    documents:
+      passport: {status: verified, valid_from: '2019-06-02', valid_until: '2029-06-01'}
+      br_evisa: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-s2
+    trip: t-2715
+    full_name: Paul Lindgren
+    role: staff
+    is_minor: false
+    documents:
+      passport: {status: verified, valid_from: '2016-12-12', valid_until: '2026-12-11', note: Renewal not started}
+      br_evisa: verified
+      travel_insurance: verified
+      emergency_contact: verified
+  - key: t-2715-s3
+    trip: t-2715
+    full_name: Sara Holt
+    role: staff
+    is_minor: false
+    documents:
+      passport: {status: verified, valid_from: '2023-04-18', valid_until: '2033-04-17'}
+      br_evisa: verified
+      travel_insurance: verified
+      emergency_contact: verified

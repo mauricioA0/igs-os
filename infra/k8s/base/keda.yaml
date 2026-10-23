@@ -1,0 +1,48 @@
+# Scale workers on Temporal task-queue backlog (KEDA >= 2.17 `temporal` scaler). Durable timers
+# and signals land as workflow tasks on the queue, so scale-to-zero still wakes up for them.
+# KEDA is installed cluster-wide (helm kedacore/keda) — see infra/k8s/README.md.
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: igs-worker-flows
+  namespace: igs-workers
+spec:
+  scaleTargetRef:
+    name: igs-worker-flows
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  pollingInterval: 15
+  cooldownPeriod: 300
+  triggers:
+    - type: temporal
+      metadata:
+        endpoint: temporal-frontend.temporal.svc.cluster.local:7233
+        namespace: igs
+        taskQueue: flows
+        queueTypes: workflow,activity
+        targetQueueSize: "5"
+        activationTargetQueueSize: "0"
+        # Keep one replica while executions are mid-flight (e.g. right after a timer fires).
+        includeRunningWorkflowCount: "true"
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: igs-worker-ingestion
+  namespace: igs-workers
+spec:
+  scaleTargetRef:
+    name: igs-worker-ingestion
+  minReplicaCount: 0
+  maxReplicaCount: 8
+  pollingInterval: 15
+  cooldownPeriod: 300
+  triggers:
+    - type: temporal
+      metadata:
+        endpoint: temporal-frontend.temporal.svc.cluster.local:7233
+        namespace: igs
+        taskQueue: ingestion
+        queueTypes: workflow,activity
+        targetQueueSize: "4" # one embedding batch fan-out per replica
+        activationTargetQueueSize: "0"

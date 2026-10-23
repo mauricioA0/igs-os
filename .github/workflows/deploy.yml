@@ -1,0 +1,271 @@
+name: deploy
+
+# Continuous deployment to GCP (mv-cloud-509914, us-central1) + Vercel.
+# - push to main → demo (only once the repo variable DEPLOY_ENABLED is "true", i.e. after the
+#   infra bootstrap in docs/infra/runbook.md; until then this workflow is a no-op).
+# - workflow_dispatch → demo or prod. The `prod` GitHub environment has required reviewers,
+#   so every prod job waits for a manual approval.
+# Names (services, jobs, cluster, secrets) come from GitHub environment variables that mirror
+# the Terraform outputs in infra/terraform/envs/<env>; see the runbook §Configuration.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["docs/**", "**/*.md", "spikes/**"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options: [demo, prod]
+        default: demo
+      build_models:
+        description: Rebuild the models image (BGE-M3 + reranker, ~4.5 GB of weights)
+        type: boolean
+        default: false
+      skip_temporal:
+        description: Skip the Temporal server Helm upgrade (workers are still upgraded)
+        type: boolean
+        default: true
+      reset_demo:
+        description: Reset the demo tenant to the scripted story after deploying (demo only)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.environment || 'demo' }}
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ github.sha }}
+
+jobs:
+  plan:
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.plan.outputs.environment }}
+      build_models: ${{ steps.plan.outputs.build_models }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_ENV: ${{ inputs.environment }}
+          INPUT_BUILD_MODELS: ${{ inputs.build_models }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [[ "$EVENT" == workflow_dispatch ]]; then
+            echo "environment=$INPUT_ENV" >> "$GITHUB_OUTPUT"
+            echo "build_models=$INPUT_BUILD_MODELS" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=demo" >> "$GITHUB_OUTPUT"
+            # Rebuild the heavy models image only when its sources changed.
+            if git diff --name-only "$BEFORE" "$GITHUB_SHA" -- services/models | grep -q .; then
+              echo "build_models=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "build_models=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+  images:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: true
+      matrix:
+        component: [core, worker, ops, models]
+    steps:
+      - name: Skip models unless requested
+        id: gate
+        env:
+          COMPONENT: ${{ matrix.component }}
+          BUILD_MODELS: ${{ needs.plan.outputs.build_models }}
+        run: |
+          if [[ "$COMPONENT" == models && "$BUILD_MODELS" != true ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.gate.outputs.skip != 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - if: steps.gate.outputs.skip != 'true'
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - if: steps.gate.outputs.skip != 'true'
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - if: steps.gate.outputs.skip != 'true'
+        name: Build and push
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+          IGS_ENV: ${{ needs.plan.outputs.environment }}
+          COMPONENT: ${{ matrix.component }}
+        run: |
+          gcloud auth configure-docker "${GCP_REGION}-docker.pkg.dev" --quiet
+          image="$(scripts/deploy/build-push.sh "$COMPONENT" "$TAG")"
+          echo "pushed $image" >> "$GITHUB_STEP_SUMMARY"
+
+  migrate:
+    needs: [plan, images]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - name: Alembic upgrade head (Cloud Run job)
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+          IGS_ENV: ${{ needs.plan.outputs.environment }}
+        run: |
+          source scripts/deploy/lib.sh
+          scripts/deploy/run-job.sh "${STACK}-migrate" "$(image_uri igs-ops "$TAG")" alembic upgrade head
+
+  api:
+    needs: [plan, migrate]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      api_url: ${{ steps.core.outputs.url }}
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_REGION: ${{ vars.GCP_REGION }}
+      IGS_ENV: ${{ needs.plan.outputs.environment }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - name: Deploy models service
+        if: needs.plan.outputs.build_models == 'true'
+        run: |
+          source scripts/deploy/lib.sh
+          scripts/deploy/deploy-run.sh models "$(image_uri igs-models "$TAG")"
+      - name: Deploy core API
+        id: core
+        run: |
+          source scripts/deploy/lib.sh
+          url="$(scripts/deploy/deploy-run.sh core "$(image_uri igs-core "$TAG")" | tail -n1)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "core API: $url" >> "$GITHUB_STEP_SUMMARY"
+
+  workers:
+    needs: [plan, migrate]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - uses: google-github-actions/get-gke-credentials@3da1e46a907576cefaa90c484278bb5b259dd395 # v3.0.0
+        with:
+          cluster_name: igs-${{ needs.plan.outputs.environment }}
+          location: ${{ vars.GCP_REGION }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: v3.16.4
+      - name: Kustomize base, Helm Temporal, roll workers
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+          IGS_ENV: ${{ needs.plan.outputs.environment }}
+          TEMPORAL_CHART_VERSION: ${{ vars.TEMPORAL_CHART_VERSION }}
+          TEMPORAL_DB_HOST: ${{ vars.TEMPORAL_DB_HOST }}
+          # Pushes never touch the Temporal server; only a dispatch can opt in.
+          SKIP_TEMPORAL: ${{ github.event_name != 'workflow_dispatch' || inputs.skip_temporal }}
+        run: |
+          source scripts/deploy/lib.sh
+          scripts/deploy/gke-deploy.sh "$(image_uri igs-worker "$TAG")"
+
+  web:
+    needs: [plan, api]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    outputs:
+      web_url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: npm install --global vercel@65.1.0
+      # API_URL / NEXT_PUBLIC_API_URL / IGS_API_KEY live in the Vercel project settings
+      # (pulled below), so the build and the server runtime see the same values.
+      - name: Build and deploy (prebuilt)
+        id: deploy
+        working-directory: apps/web
+        run: |
+          vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+          vercel build --prod --token "$VERCEL_TOKEN"
+          url="$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "web: $url" >> "$GITHUB_STEP_SUMMARY"
+
+  smoke:
+    needs: [plan, api, workers, web]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Smoke checks
+        env:
+          API: ${{ vars.API_URL || needs.api.outputs.api_url }}
+          WEB: ${{ vars.WEB_URL || needs.web.outputs.web_url }}
+        run: scripts/deploy/smoke.sh "$API" "$WEB"
+      - name: Reset demo story
+        if: needs.plan.outputs.environment == 'demo' && inputs.reset_demo
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+      - if: needs.plan.outputs.environment == 'demo' && inputs.reset_demo
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+      - if: needs.plan.outputs.environment == 'demo' && inputs.reset_demo
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+          IGS_ENV: demo
+          MODELS_URL: ${{ vars.MODELS_URL }}
+        run: |
+          source scripts/deploy/lib.sh
+          scripts/deploy/run-job.sh "${STACK}-reset-demo" "$(image_uri igs-ops "$TAG")" \
+            python -m igs_common.seed --reset-demo

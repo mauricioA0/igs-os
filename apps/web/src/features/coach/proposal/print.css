@@ -1,0 +1,80 @@
+/* Proposal print stylesheet: fits in ≤ 5 pages on A4 or US Letter (the browser picks the size).
+   Light ink on white, compact itinerary, no forced page break per section. */
+@media print {
+  @page {
+    margin: 12mm 11mm;
+  }
+
+  html,
+  body,
+  .proposal-root {
+    background: #fff !important;
+    color: #111 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-size: 10.5pt;
+  }
+
+  .proposal-root * {
+    color: #111 !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .proposal-hero {
+    min-height: auto !important;
+    padding: 0 0 6mm !important;
+  }
+
+  .proposal-section {
+    padding-top: 5mm !important;
+    padding-bottom: 5mm !important;
+  }
+
+  .proposal-itinerary {
+    break-before: page;
+    columns: 2;
+    column-gap: 6mm;
+  }
+
+  .proposal-day,
+  .proposal-card {
+    break-inside: avoid;
+  }
+
+  .proposal-investment {
+    break-before: page;
+  }
+
+  /* Site-scale type, scaled to paper. */
+  .proposal-root .type-mega {
+    font-size: 34pt !important;
+  }
+  .proposal-root .type-section {
+    font-size: 18pt !important;
+    margin-bottom: 4mm !important;
+  }
+  .proposal-root .type-card {
+    font-size: 13pt !important;
+  }
+  .proposal-root .kpi-number {
+    font-size: 20pt !important;
+  }
+  .proposal-root .eyebrow-wide {
+    font-size: 8pt !important;
+  }
+  .proposal-root .headline-muted {
+    color: #666 !important;
+  }
+  .proposal-root [class*="bg-"] {
+    background: transparent !important;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}

@@ -1,0 +1,1431 @@
+# Demo sales & operations data — mirrors apps/web/src/app/(prototype)/_mock/{trips,leads,approvals}.ts
+# (same ids, so the web prototype and the API tell the same story). Demo "today" is 2026-10-22.
+# All teams and people are fictional.
+contacts:
+  - key: c-sarah-okafor
+    name: Sarah Okafor
+    email: sokafor@brookfield.example
+    organization: Brookfield University
+    role: coach
+    account: acc-brookfield
+  - key: c-diego-alvarez
+    name: Diego Alvarez
+    email: dalvarez@cedarridge.example
+    organization: Cedar Ridge HS
+    role: coach
+  - key: c-liam-o-connor
+    name: Liam O'Connor
+    email: loconnor@maplegrove.example
+    organization: Maple Grove College
+    role: coach
+  - key: c-nia-brooks
+    name: Nia Brooks
+    email: nbrooks@eastview.example
+    organization: Eastview University
+    role: coach
+  - key: c-emma-lawson
+    name: Emma Lawson
+    email: elawson@westbrook.example
+    organization: Westbrook College
+    role: coach
+    account: acc-westbrook
+  - key: c-priya-natarajan
+    name: Priya Natarajan
+    email: pnatarajan@harborstate.example
+    organization: Harbor State University
+    role: coach
+  - key: c-tom-becker
+    name: Tom Becker
+    email: tbecker@pinevalley.example
+    organization: Pine Valley College
+    role: coach
+  - key: c-dana-whitfield
+    name: Dana Whitfield
+    email: dwhitfield@lakeshore.example
+    organization: Lakeshore University
+    role: coach
+    account: acc-lakeshore
+  - key: c-marcus-hale
+    name: Marcus Hale
+    email: mhale@riversidefc.example
+    organization: Riverside FC Academy
+    role: coach
+    account: acc-riverside
+  - key: c-ryan-mitchell
+    name: Ryan Mitchell
+    email: rmitchell@northfield.example
+    organization: Northfield College
+    role: coach
+    account: acc-northfield
+  - key: c-ben-carter
+    name: Ben Carter
+    email: bcarter@granitebay.example
+    organization: Granite Bay Rugby Club
+    role: coach
+  - key: c-laura-kim
+    name: Laura Kim
+    email: lkim@summitelite.example
+    organization: Summit Elite SC
+    role: coach
+    account: acc-summit
+leads:
+  - key: l-501
+    contact: c-sarah-okafor
+    account: acc-brookfield
+    organization: Brookfield University
+    program: Women's Soccer
+    sport: soccer
+    gender: women
+    age_group: college
+    level_score: 7
+    group_size: 25
+    destination_country: Argentina
+    travel_window: Marzo 2027 · 10 días
+    travel_start: '2027-03-08'
+    duration_days: 10
+    budget_per_person_usd: 2890
+    value_usd: 72250
+    source: chat
+    status: qualified
+    last_activity_at: '2026-10-22T09:41:00-03:00'
+    agent_summary: D1, quiere 3 partidos exigentes y 1 accesible. Pidió foco en video análisis. Presupuesto
+      USD 2.900 pp.
+    next_step: Propuesta lista, esperando aprobación de ops
+  - key: l-502
+    contact: c-diego-alvarez
+    account: null
+    organization: Cedar Ridge HS
+    program: Boys Varsity Soccer
+    sport: soccer
+    gender: men
+    age_group: U17
+    level_score: 5
+    group_size: 30
+    destination_country: Costa Rica
+    travel_window: Junio 2027 · 8 días
+    travel_start: '2027-06-01'
+    duration_days: 8
+    budget_per_person_usd: 2200
+    value_usd: 66000
+    source: manual
+    status: new
+    last_activity_at: '2026-10-22T08:05:00-03:00'
+    agent_summary: Formulario web. Faltan fechas exactas y presupuesto. Pregunta por seguro médico para
+      menores.
+    next_step: El agente pidió fechas y presupuesto por mail
+  - key: l-503
+    contact: c-liam-o-connor
+    account: null
+    organization: Maple Grove College
+    program: Men's Rugby
+    sport: rugby
+    gender: men
+    age_group: college
+    level_score: 7
+    group_size: 34
+    destination_country: Argentina
+    travel_window: Agosto 2027 · 12 días
+    travel_start: '2027-08-01'
+    duration_days: 12
+    budget_per_person_usd: 2900
+    value_usd: 98600
+    source: manual
+    status: new
+    last_activity_at: '2026-10-21T18:30:00-03:00'
+    agent_summary: 'Referido por Northfield. Quiere jugar contra clubes de zona norte. Grupo grande: 2
+      buses.'
+    next_step: Calificar nivel y confirmar fechas
+  - key: l-504
+    contact: c-nia-brooks
+    account: null
+    organization: Eastview University
+    program: Women's Basketball
+    sport: basketball
+    gender: women
+    age_group: college
+    level_score: 6
+    group_size: 15
+    destination_country: Argentina
+    travel_window: Mayo 2027 · 9 días
+    travel_start: '2027-05-01'
+    duration_days: 9
+    budget_per_person_usd: 2500
+    value_usd: 37500
+    source: manual
+    status: qualified
+    last_activity_at: '2026-10-21T15:12:00-03:00'
+    agent_summary: Catálogo de rivales femeninos de básquet limitado en BA. Sugerir 2 partidos + clínica.
+    next_step: Ops valida rivales disponibles
+  - key: l-505
+    contact: c-emma-lawson
+    account: acc-westbrook
+    organization: Westbrook College
+    program: Women's Field Hockey
+    sport: field_hockey
+    gender: women
+    age_group: college
+    level_score: 6
+    group_size: 20
+    destination_country: Argentina
+    travel_window: Marzo 2027 · 10 días
+    travel_start: '2027-03-08'
+    duration_days: 10
+    budget_per_person_usd: 2640
+    value_usd: 52800
+    source: chat
+    status: proposal_sent
+    last_activity_at: '2026-10-20T11:00:00-03:00'
+    agent_summary: Propuesta IGS-2720 enviada. La coach abrió el link 3 veces. Preguntó por visa (no requiere).
+    next_step: Seguimiento automático en 2 días
+  - key: l-506
+    contact: c-priya-natarajan
+    account: null
+    organization: Harbor State University
+    program: Women's Volleyball
+    sport: volleyball
+    gender: women
+    age_group: college
+    level_score: 6
+    group_size: 16
+    destination_country: Argentina
+    travel_window: Mayo 2027 · 10 días
+    travel_start: '2027-05-20'
+    duration_days: 10
+    budget_per_person_usd: 2480
+    value_usd: 39680
+    source: manual
+    status: proposal_sent
+    last_activity_at: '2026-10-19T16:45:00-03:00'
+    agent_summary: Propuesta IGS-2726 enviada. Pidió opción con 3 partidos en lugar de 2.
+    next_step: Ajustar itinerario y reenviar
+  - key: l-507
+    contact: c-tom-becker
+    account: null
+    organization: Pine Valley College
+    program: Men's Soccer
+    sport: soccer
+    gender: men
+    age_group: college
+    level_score: 5
+    group_size: 23
+    destination_country: Costa Rica
+    travel_window: Enero 2027 · 9 días
+    travel_start: '2027-01-04'
+    duration_days: 9
+    budget_per_person_usd: 2350
+    value_usd: 54050
+    source: manual
+    status: proposal_sent
+    last_activity_at: '2026-10-18T10:20:00-03:00'
+    agent_summary: Borrador IGS-2723 en armado. Quiere día de servicio comunitario.
+    next_step: Completar itinerario
+  - key: l-508
+    contact: c-dana-whitfield
+    account: acc-lakeshore
+    organization: Lakeshore University
+    program: Women's Soccer
+    sport: soccer
+    gender: women
+    age_group: college
+    level_score: 7
+    group_size: 24
+    destination_country: Argentina
+    travel_window: Marzo 2027 (spring break)
+    travel_start: '2027-03-06'
+    duration_days: 10
+    budget_per_person_usd: 2890
+    value_usd: 69360
+    source: chat
+    status: qualified
+    last_activity_at: '2026-10-22T08:10:00-03:00'
+    agent_summary: Calificó a Lakeshore (D1, nivel 7, 24 viajeros) por chat y armó la propuesta IGS-2711. Inscripción vencida (24 × US$95); Haines decide el 31/10.
+    next_step: Aprobar el envío de la propuesta antes de la reunión de presupuesto del 28/10
+  - key: l-509
+    contact: c-marcus-hale
+    account: acc-riverside
+    organization: Riverside FC Academy
+    program: U17 Boys
+    sport: soccer
+    gender: men
+    age_group: U17
+    level_score: 7
+    group_size: 22
+    destination_country: Brazil
+    travel_window: Diciembre 2026
+    travel_start: '2026-12-05'
+    duration_days: 10
+    budget_per_person_usd: 3180
+    value_usd: 69960
+    source: chat
+    status: won
+    last_activity_at: '2026-09-12T09:00:00-03:00'
+    agent_summary: Inscripción y primeras cuotas recibidas. Gira IGS-2715.
+    next_step: Saldo vence 21 oct
+  - key: l-510
+    contact: c-ryan-mitchell
+    account: acc-northfield
+    organization: Northfield College
+    program: Men's Soccer
+    sport: soccer
+    gender: men
+    age_group: college
+    level_score: 6
+    group_size: 26
+    destination_country: Argentina
+    travel_window: Octubre 2026
+    travel_start: '2026-10-18'
+    duration_days: 10
+    budget_per_person_usd: 2790
+    value_usd: 72540
+    source: manual
+    status: won
+    last_activity_at: '2026-08-02T09:00:00-03:00'
+    agent_summary: Pagado al 100%. Gira en curso IGS-2709.
+    next_step: —
+  - key: l-511
+    contact: c-ben-carter
+    account: null
+    organization: Granite Bay Rugby Club
+    program: U19 Men
+    sport: rugby
+    gender: men
+    age_group: U19
+    level_score: 6
+    group_size: 28
+    destination_country: Argentina
+    travel_window: Julio 2026
+    travel_start: '2026-07-01'
+    duration_days: 10
+    budget_per_person_usd: 2700
+    value_usd: 75600
+    source: manual
+    status: lost
+    last_activity_at: '2026-06-10T09:00:00-03:00'
+    agent_summary: Eligió un tour en Nueva Zelanda por fechas. Reactivar para 2027.
+    next_step: Recordatorio en enero
+    lost_reason: Pidió 10% de descuento; ofrecimos 5% + clínica gratis y eligió otro operador.
+  - key: l-497
+    contact: c-laura-kim
+    account: acc-summit
+    organization: Summit Elite SC
+    program: U15 Girls
+    sport: soccer
+    gender: women
+    age_group: U15
+    level_score: 5
+    group_size: 31
+    destination_country: Argentina
+    travel_window: Julio 2026 · 9 días
+    travel_start: '2026-07-01'
+    duration_days: 9
+    budget_per_person_usd: 2560
+    value_usd: 79360
+    source: manual
+    status: won
+    last_activity_at: '2026-07-10T12:00:00-03:00'
+    agent_summary: Club U15 femenino, primera gira internacional del club. Cerró con pago en 3 cuotas.
+    next_step: Gira completada; seguimiento para 2027
+trips:
+  - key: t-2709
+    code: IGS-2709
+    lead: l-510
+    account: acc-northfield
+    title: Northfield College Men's Soccer · Buenos Aires 2026
+    team:
+      name: Northfield College
+      program: Men's Soccer
+      sport: soccer
+      gender: men
+      age_group: college
+      level_score: 6
+    city: Buenos Aires
+    country: Argentina
+    start_date: '2026-10-18'
+    end_date: '2026-10-27'
+    travelers: 26
+    status: in_progress
+    price_per_person_usd: 2790
+    deposit_paid_pct: 100
+    owner: lucia.fernandez
+    active_flow: Seguimiento en gira
+    items:
+      - key: t-2709-i1
+        day: 1
+        date: '2026-10-18'
+        slot: morning
+        time: 07:40
+        kind: arrival
+        title: Llegada a Ezeiza y traslado al hotel
+        provider: bus-ba
+        status: confirmed
+        notes: Vuelo AA 931 · aterrizó 07:22
+      - key: t-2709-i2
+        day: 1
+        date: '2026-10-18'
+        slot: afternoon
+        kind: free
+        title: Check-in y descanso
+        provider: hotel-palermo
+        status: confirmed
+      - key: t-2709-i3
+        day: 1
+        date: '2026-10-18'
+        slot: evening
+        time: '20:30'
+        kind: experience
+        title: Cena de bienvenida en Palermo
+        provider: guide-ba
+        status: confirmed
+      - key: t-2709-i4
+        day: 2
+        date: '2026-10-19'
+        slot: morning
+        time: 09:30
+        kind: training
+        title: Entrenamiento con cuerpo técnico AFA
+        provider: venue-ba
+        status: confirmed
+      - key: t-2709-i5
+        day: 2
+        date: '2026-10-19'
+        slot: afternoon
+        time: '15:00'
+        kind: experience
+        title: Tour La Bombonera + Caminito
+        provider: guide-ba
+        status: confirmed
+      - key: t-2709-i6
+        day: 3
+        date: '2026-10-20'
+        slot: afternoon
+        time: '16:00'
+        kind: match
+        title: vs Club Social Villa Urquiza
+        opponent: club-social-villa-urquiza
+        opponent_level: 6
+        provider: ref-ba
+        status: confirmed
+        notes: Ganó Northfield 2-1. Reporte enviado al coach.
+      - key: t-2709-i7
+        day: 4
+        date: '2026-10-21'
+        slot: morning
+        kind: free
+        title: Recuperación y pileta
+        provider: hotel-palermo
+        status: confirmed
+      - key: t-2709-i8
+        day: 4
+        date: '2026-10-21'
+        slot: afternoon
+        time: '16:00'
+        kind: experience
+        title: Clínica comunitaria con chicos del club
+        provider: guide-ba
+        status: confirmed
+        notes: Donación de 30 pelotas y camisetas
+      - key: t-2709-i9
+        day: 5
+        date: '2026-10-22'
+        slot: morning
+        time: 09:30
+        kind: training
+        title: Sesión táctica pre-partido
+        provider: venue-ba
+        status: confirmed
+      - key: t-2709-i10
+        day: 5
+        date: '2026-10-22'
+        slot: afternoon
+        time: '15:00'
+        kind: experience
+        title: Tour El Monumental
+        provider: guide-ba
+        status: confirmed
+      - key: t-2709-i11
+        day: 5
+        date: '2026-10-22'
+        slot: evening
+        time: '20:00'
+        kind: experience
+        title: Clase de tango y asado
+        provider: guide-ba
+        status: requested
+        alert: El proveedor no confirmó el horario; la cena es hoy.
+      - key: t-2709-i12
+        day: 6
+        date: '2026-10-23'
+        slot: afternoon
+        time: '17:00'
+        kind: match
+        title: vs Academia Palermo FC
+        detail: Partido exigente pedido por el coach
+        opponent: academia-palermo-fc
+        opponent_level: 8
+        provider: ref-ba
+        status: pending
+        alert: Falta confirmar árbitro para mañana.
+      - key: t-2709-i13
+        day: 7
+        date: '2026-10-24'
+        slot: morning
+        time: 09:00
+        kind: experience
+        title: Excursión al Delta de Tigre
+        provider: guide-ba
+        status: confirmed
+      - key: t-2709-i14
+        day: 8
+        date: '2026-10-25'
+        slot: afternoon
+        time: '15:30'
+        kind: match
+        title: vs Liga Universitaria UBA Select
+        opponent: liga-universitaria-uba-select
+        opponent_level: 5
+        provider: ref-ba
+        status: confirmed
+      - key: t-2709-i15
+        day: 9
+        date: '2026-10-26'
+        slot: evening
+        kind: experience
+        title: Partido de Liga Profesional
+        provider: guide-ba
+        status: requested
+        alert: La liga todavía no publicó el horario del fixture.
+      - key: t-2709-i16
+        day: 10
+        date: '2026-10-27'
+        slot: morning
+        time: 08:00
+        kind: departure
+        title: Traslado a Ezeiza
+        provider: bus-ba
+        status: confirmed
+        notes: Vuelo AA 930 · 12:45
+  - key: t-2711
+    code: IGS-2711
+    lead: l-508
+    account: acc-lakeshore
+    title: Lakeshore University Women's Soccer · Buenos Aires 2027
+    team:
+      name: Lakeshore University
+      program: Women's Soccer
+      sport: soccer
+      gender: women
+      age_group: college
+      level_score: 7
+    city: Buenos Aires
+    country: Argentina
+    start_date: '2027-03-06'
+    end_date: '2027-03-15'
+    travelers: 24
+    # Drafted by the inbound-inquiry flow from Dana's chat; waiting for ops approval to be sent.
+    status: proposed
+    price_per_person_usd: 2890
+    deposit_paid_pct: 0
+    # Team-level payment terms (igs_common.payments): the 24 enrollment fees were due Oct 15.
+    payment_terms:
+      enrollment_due: '2026-10-15'
+    owner: martin.rios
+    active_flow: Consulta entrante
+    items:
+      - key: t-2711-i1
+        day: 1
+        date: '2027-03-06'
+        slot: morning
+        time: 08:40
+        kind: arrival
+        title: Llegada a Ezeiza y traslado al hotel
+        provider: bus-ba
+        status: pending
+        notes: Delta vía Atlanta (tentativo)
+      - key: t-2711-i2
+        day: 1
+        date: '2027-03-06'
+        slot: afternoon
+        kind: free
+        title: Check-in
+        provider: hotel-palermo
+        status: pending
+        alert: 'Bloqueo de marzo sujeto a la inscripción del equipo (24 × US$95): el hotel lo libera el 31/10.'
+      - key: t-2711-i3
+        day: 2
+        date: '2027-03-07'
+        slot: morning
+        kind: training
+        title: Entrenamiento con cuerpo técnico AFA
+        experience: training-session-with-afa-certified-coaches
+        provider: venue-ba
+        status: pending
+      - key: t-2711-i4
+        day: 2
+        date: '2027-03-07'
+        slot: afternoon
+        kind: experience
+        title: Tour La Bombonera + Caminito
+        experience: la-bombonera-stadium-museum-tour
+        provider: guide-ba
+        status: pending
+      - key: t-2711-i5
+        day: 3
+        date: '2027-03-08'
+        slot: afternoon
+        kind: match
+        title: vs Escuela de Fútbol Femenino Sur
+        opponent: escuela-de-futbol-femenino-sur
+        opponent_level: 5
+        provider: ref-ba
+        status: pending
+      - key: t-2711-i6
+        day: 4
+        date: '2027-03-09'
+        slot: morning
+        kind: training
+        title: Sesión técnica
+        provider: venue-ba
+        status: pending
+      - key: t-2711-i7
+        day: 4
+        date: '2027-03-09'
+        slot: afternoon
+        kind: experience
+        title: Clínica comunitaria
+        experience: community-clinic-with-local-kids
+        provider: guide-ba
+        status: pending
+      - key: t-2711-i8
+        day: 5
+        date: '2027-03-10'
+        slot: afternoon
+        kind: match
+        title: vs Deportivo Belgrano Femenino
+        opponent: deportivo-belgrano-femenino
+        opponent_level: 7
+        provider: ref-ba
+        status: pending
+      - key: t-2711-i9
+        day: 6
+        date: '2027-03-11'
+        slot: morning
+        kind: experience
+        title: Excursión al Delta de Tigre (día de descanso)
+        experience: tigre-delta-boat-trip
+        provider: guide-ba
+        status: pending
+      - key: t-2711-i10
+        day: 7
+        date: '2027-03-12'
+        slot: evening
+        kind: experience
+        title: Clase de tango y asado
+        experience: tango-class-asado-night
+        provider: guide-ba
+        status: pending
+      - key: t-2711-i11
+        day: 8
+        date: '2027-03-13'
+        slot: afternoon
+        kind: match
+        title: vs Selección Universitaria Femenina
+        opponent_name: Selección Universitaria Femenina
+        opponent_level: 6
+        provider: ref-ba
+        status: pending
+        alert: 'Rival tentativo hasta que cierre su calendario de otoño.'
+      - key: t-2711-i12
+        day: 9
+        date: '2027-03-14'
+        slot: afternoon
+        kind: experience
+        title: Tour El Monumental
+        experience: el-monumental-stadium-tour
+        provider: guide-ba
+        status: pending
+      - key: t-2711-i13
+        day: 10
+        date: '2027-03-15'
+        slot: evening
+        time: 21:15
+        kind: departure
+        title: Traslado a Ezeiza
+        provider: bus-ba
+        status: pending
+  - key: t-2715
+    code: IGS-2715
+    lead: l-509
+    account: acc-riverside
+    title: Riverside FC Academy U17 Boys · Rio de Janeiro 2026
+    team:
+      name: Riverside FC Academy
+      program: U17 Boys
+      sport: soccer
+      gender: men
+      age_group: U17
+      level_score: 7
+    city: Rio de Janeiro
+    country: Brazil
+    start_date: '2026-12-05'
+    end_date: '2026-12-14'
+    travelers: 22
+    status: confirmed
+    price_per_person_usd: 3180
+    deposit_paid_pct: 30
+    owner: martin.rios
+    active_flow: null
+    items:
+      - key: t-2715-i1
+        day: 1
+        date: '2026-12-05'
+        slot: morning
+        kind: arrival
+        title: Llegada a Galeão y traslado a Barra
+        provider: bus-rio
+        status: confirmed
+      - key: t-2715-i2
+        day: 1
+        date: '2026-12-05'
+        slot: afternoon
+        kind: free
+        title: Check-in
+        provider: hotel-rio
+        status: confirmed
+      - key: t-2715-i3
+        day: 2
+        date: '2026-12-06'
+        slot: afternoon
+        kind: experience
+        title: Futevôlei en Copacabana
+        status: confirmed
+      - key: t-2715-i4
+        day: 3
+        date: '2026-12-07'
+        slot: afternoon
+        kind: match
+        title: vs Escolinha Barra FC
+        opponent: escolinha-barra-fc
+        opponent_level: 7
+        status: requested
+      - key: t-2715-i5
+        day: 4
+        date: '2026-12-08'
+        slot: morning
+        kind: experience
+        title: Tour del Maracanã
+        status: confirmed
+      - key: t-2715-i6
+        day: 5
+        date: '2026-12-09'
+        slot: morning
+        kind: experience
+        title: Cristo Redentor y Pan de Azúcar
+        status: confirmed
+      - key: t-2715-i7
+        day: 6
+        date: '2026-12-10'
+        slot: afternoon
+        kind: match
+        title: vs Carioca Universitário
+        opponent: carioca-universitario
+        opponent_level: 5
+        status: pending
+      - key: t-2715-i8
+        day: 8
+        date: '2026-12-12'
+        slot: afternoon
+        kind: match
+        title: vs Escolinha Barra FC (revancha)
+        opponent: escolinha-barra-fc
+        opponent_level: 7
+        status: pending
+      - key: t-2715-i9
+        day: 10
+        date: '2026-12-14'
+        slot: morning
+        kind: departure
+        title: Traslado a Galeão
+        provider: bus-rio
+        status: confirmed
+  - key: t-2723
+    code: IGS-2723
+    lead: l-507
+    account: null
+    title: Pine Valley College Men's Soccer · San José 2027
+    team:
+      name: Pine Valley College
+      program: Men's Soccer
+      sport: soccer
+      gender: men
+      age_group: college
+      level_score: 5
+    city: San José
+    country: Costa Rica
+    start_date: '2027-01-04'
+    end_date: '2027-01-12'
+    travelers: 23
+    status: draft
+    price_per_person_usd: 2350
+    deposit_paid_pct: 0
+    owner: martin.rios
+    active_flow: null
+    items:
+      - key: t-2723-i1
+        day: 1
+        date: '2027-01-04'
+        slot: morning
+        kind: arrival
+        title: Llegada a San José
+        provider: bus-cr
+        status: pending
+      - key: t-2723-i2
+        day: 3
+        date: '2027-01-06'
+        slot: afternoon
+        kind: match
+        title: vs Universidad de Costa Rica FC
+        opponent: universidad-de-costa-rica-fc
+        opponent_level: 4
+        status: pending
+      - key: t-2723-i3
+        day: 5
+        date: '2027-01-08'
+        slot: morning
+        kind: experience
+        title: Volcán Arenal y aguas termales
+        status: pending
+      - key: t-2723-i4
+        day: 9
+        date: '2027-01-12'
+        slot: morning
+        kind: departure
+        title: Traslado al aeropuerto
+        provider: bus-cr
+        status: pending
+  - key: t-2720
+    code: IGS-2720
+    lead: l-505
+    account: acc-westbrook
+    title: Westbrook College Women's Field Hockey · Buenos Aires 2027
+    team:
+      name: Westbrook College
+      program: Women's Field Hockey
+      sport: field_hockey
+      gender: women
+      age_group: college
+      level_score: 6
+    city: Buenos Aires
+    country: Argentina
+    start_date: '2027-03-08'
+    end_date: '2027-03-17'
+    travelers: 20
+    status: proposed
+    price_per_person_usd: 2640
+    deposit_paid_pct: 0
+    owner: lucia.fernandez
+    active_flow: Consulta entrante
+    items:
+      - key: t-2720-i1
+        day: 1
+        date: '2027-03-08'
+        slot: morning
+        kind: arrival
+        title: Llegada a Ezeiza y traslado al hotel
+        provider: bus-ba
+        status: pending
+      - key: t-2720-i2
+        day: 3
+        date: '2027-03-10'
+        slot: afternoon
+        kind: match
+        title: vs Hockey Club Olivos
+        opponent: hockey-club-olivos
+        opponent_level: 7
+        provider: ref-ba
+        status: pending
+      - key: t-2720-i3
+        day: 5
+        date: '2027-03-12'
+        slot: afternoon
+        kind: experience
+        title: Tour La Bombonera
+        provider: guide-ba
+        status: pending
+      - key: t-2720-i4
+        day: 7
+        date: '2027-03-14'
+        slot: afternoon
+        kind: match
+        title: vs Hockey Club Olivos (2da)
+        opponent: hockey-club-olivos
+        opponent_level: 7
+        provider: ref-ba
+        status: pending
+      - key: t-2720-i5
+        day: 10
+        date: '2027-03-17'
+        slot: morning
+        kind: departure
+        title: Traslado a Ezeiza
+        provider: bus-ba
+        status: pending
+  - key: t-2726
+    code: IGS-2726
+    lead: l-506
+    account: null
+    title: Harbor State University Women's Volleyball · Buenos Aires 2027
+    team:
+      name: Harbor State University
+      program: Women's Volleyball
+      sport: volleyball
+      gender: women
+      age_group: college
+      level_score: 6
+    city: Buenos Aires
+    country: Argentina
+    start_date: '2027-05-20'
+    end_date: '2027-05-29'
+    travelers: 16
+    status: proposed
+    price_per_person_usd: 2480
+    deposit_paid_pct: 0
+    owner: lucia.fernandez
+    active_flow: null
+    items:
+      - key: t-2726-i1
+        day: 1
+        date: '2027-05-20'
+        slot: morning
+        kind: arrival
+        title: Llegada a Ezeiza
+        provider: bus-ba
+        status: pending
+      - key: t-2726-i2
+        day: 3
+        date: '2027-05-22'
+        slot: evening
+        kind: match
+        title: vs Voleibol Club Caballito
+        opponent: voleibol-club-caballito
+        opponent_level: 6
+        status: pending
+      - key: t-2726-i3
+        day: 6
+        date: '2027-05-25'
+        slot: evening
+        kind: match
+        title: vs Voleibol Club Caballito (2do)
+        opponent: voleibol-club-caballito
+        opponent_level: 6
+        status: pending
+      - key: t-2726-i4
+        day: 10
+        date: '2027-05-29'
+        slot: morning
+        kind: departure
+        title: Traslado a Ezeiza
+        provider: bus-ba
+        status: pending
+  - key: t-2698
+    code: IGS-2698
+    lead: l-497
+    account: acc-summit
+    title: Summit Elite SC U15 Girls · Buenos Aires 2026
+    team:
+      name: Summit Elite SC
+      program: U15 Girls
+      sport: soccer
+      gender: women
+      age_group: U15
+      level_score: 5
+    city: Buenos Aires
+    country: Argentina
+    start_date: '2026-07-01'
+    end_date: '2026-07-09'
+    travelers: 31
+    status: completed
+    price_per_person_usd: 2560
+    deposit_paid_pct: 100
+    owner: lucia.fernandez
+    active_flow: null
+    items:
+      - key: t-2698-i1
+        day: 1
+        date: '2026-07-01'
+        slot: morning
+        kind: arrival
+        title: Llegada a Ezeiza
+        provider: bus-ba
+        status: confirmed
+      - key: t-2698-i2
+        day: 3
+        date: '2026-07-03'
+        slot: afternoon
+        kind: match
+        title: vs Escuela de Fútbol Femenino Sur
+        opponent: escuela-de-futbol-femenino-sur
+        opponent_level: 5
+        status: confirmed
+        notes: Empate 1-1
+      - key: t-2698-i3
+        day: 6
+        date: '2026-07-06'
+        slot: afternoon
+        kind: match
+        title: vs Escuela de Fútbol Femenino Sur (2do)
+        opponent: escuela-de-futbol-femenino-sur
+        opponent_level: 5
+        status: confirmed
+        notes: Ganó Summit 3-0
+      - key: t-2698-i4
+        day: 9
+        date: '2026-07-09'
+        slot: morning
+        kind: departure
+        title: Traslado a Ezeiza
+        provider: bus-ba
+        status: confirmed
+approvals:
+  - key: a-9001
+    flow: inbound-inquiry
+    flow_label: Consulta entrante
+    node: Aprobación de ops
+    title: Enviar propuesta a Brookfield University
+    status: pending
+    risk: external
+    requested_by: Agente de ventas
+    lead: l-501
+    created_at: '2026-10-22T09:41:00-03:00'
+    expires_at: '2026-10-24T09:41:00-03:00'
+    assignee_role: ops
+    details:
+      summary: El agente armó una gira de 10 días a Buenos Aires para Women's Soccer (D1, nivel 7). Precio
+        dentro del rango de la política.
+      payload:
+        - label: Destinatario
+          value: Coach Sarah Okafor <ssokafor@brookfield.example>
+        - label: Fechas
+          value: 8 – 17 mar 2027 · 10 días
+        - label: Viajeros
+          value: 25 (22 jugadoras + 3 staff)
+        - label: Precio por persona
+          value: USD 2.890
+        - label: Partidos
+          value: Deportivo Belgrano Fem. (7) · Academia Palermo Fem. (8) · Escuela Fem. Sur (5)
+        - label: Inscripción
+          value: US$95 por viajera para confirmar · plan de pago de US$500
+      preview:
+        kind: email
+        to: ssokafor@brookfield.example
+        subject: Your Buenos Aires tour proposal — Brookfield Women's Soccer
+        body: |-
+          Hi Coach Okafor,
+
+          Thanks for the call details. Here is your 10-day Buenos Aires proposal: three competitive matches matched to your D1 level (including one pre-professional academy, as you asked), AFA-certified training sessions, video analysis of every match, and the Bombonera and Monumental tours.
+
+          Price: USD 2,890 per person, all-inclusive except flights.
+          View the full itinerary: igs-os.app/proposal/IGS-2731
+
+          Enrolling (a US$95 enrollment fee per traveler) locks the hotel and matches; the rest follows our payment plan, with the final balance due 110 days before departure.
+
+          — The Infinity Global Sports team
+      payload_hash: 7f3a9c2e
+  - key: a-9002
+    flow_label: Seguimiento en gira
+    node: Reprogramar partido
+    title: Mover el partido de mañana a las 18:30
+    status: pending
+    risk: internal
+    requested_by: Agente de operaciones
+    trip: t-2709
+    created_at: '2026-10-22T09:58:00-03:00'
+    expires_at: '2026-10-23T09:00:00-03:00'  # survives a full demo day after a morning reset
+    assignee_role: ops
+    details:
+      summary: Árbitros AFA no tiene terna a las 17:00 para Northfield vs Academia Palermo FC. Ofrecen
+        18:30. El club rival ya aceptó.
+      payload:
+        - label: Gira
+          value: IGS-2709 · Northfield College
+        - label: Ítem
+          value: Día 6 · vs Academia Palermo FC
+        - label: Cambio
+          value: 17:00 → 18:30
+        - label: Proveedor
+          value: Árbitros AFA Certificados (pendiente → confirmado)
+        - label: Efecto
+          value: El bus de regreso se corre 90 min; la cena del hotel se mueve a 21:30
+        - label: Avisar a
+          value: Coach, Transportes Río de la Plata y Palermo Sports Hotel
+      preview:
+        kind: change
+        body: 'trip_item t-2709-i12: time 17:00 → 18:30 · provider ref-ba: requested → confirmed · notify:
+          coach, bus-ba, hotel-palermo'
+      payload_hash: b41d07aa
+  - key: a-9003
+    flow: inbound-inquiry
+    flow_label: Consulta entrante
+    node: Revisión de ops
+    node_id: ops_review
+    execution: ex-lak-inbound
+    title: Enviar la propuesta IGS-2711 a Lakeshore University
+    status: pending
+    risk: external
+    requested_by: Agente de ventas
+    trip: t-2711
+    created_at: '2026-10-22T08:10:00-03:00'
+    expires_at: '2026-10-24T08:10:00-03:00'
+    assignee_role: ops
+    # What exactly gets approved: the flow's send_proposal action and its inputs.
+    action: send_proposal
+    params:
+      tripId: "@trip:t-2711"
+      to: dwhitfield@lakeshore.example
+      cc: rhaines@lakeshore.example
+      note: ''
+    details:
+      summary: Propuesta formal para la reunión de presupuesto del 28/10. Si sale hoy, Haines puede firmar
+        y liberar la inscripción vencida antes de que el hotel suelte el bloqueo de marzo (31/10).
+      payload:
+        - label: Gira
+          value: IGS-2711 · Buenos Aires · 6–15 mar 2027 · 24 viajeros
+        - label: Precio
+          value: USD 2.890 por persona (USD 69.360) · competidor cotizó USD 2.750
+        - label: Destinatarios
+          value: Dana Whitfield (coach) · copia a Robert Haines (AD)
+      preview:
+        kind: email
+        to: dwhitfield@lakeshore.example
+        subject: Your Buenos Aires tour proposal — IGS-2711 (March 6–15, 2027)
+        body: Hi Dana, here is the formal proposal for Lakeshore Women's Soccer — Buenos Aires, March
+          6–15, 2027, 24 travelers, USD 2,890 per person. It lists exactly what's included and our
+          cancellation terms, so Robert can compare like for like at the October 28 budget meeting.
+          Enrolling the team (US$95 per traveler) keeps the March hotel and field blocks; then US$500 per traveler 30 days after enrollment and the final balance on November 16, 110 days before departure. — Martín, Infinity Global Sports
+  - key: a-9004
+    flow: post-match-report
+    flow_label: Reporte post-partido
+    node: Enviar reporte
+    title: Reporte del partido vs Villa Urquiza para Coach Mitchell
+    status: pending
+    risk: external
+    requested_by: Agente de reportes
+    trip: t-2709
+    created_at: '2026-10-21T22:10:00-03:00'
+    expires_at: '2026-10-23T22:10:00-03:00'
+    assignee_role: ops
+    details:
+      summary: Resumen con resultado, highlights y clips por jugador generado a partir de las notas del
+        staff.
+      payload:
+        - label: Resultado
+          value: Northfield 2 – 1 Villa Urquiza
+        - label: Adjuntos
+          value: 12 clips · informe PDF
+      preview:
+        kind: email
+        to: rmitchell@northfield.example
+        subject: Match report — Northfield vs Club Social Villa Urquiza
+        body: Great win yesterday, Coach! Final score 2-1. Your back line handled the direct play well;
+          most chances against came from second balls. Twelve player clips are attached, plus the scouting
+          report for tomorrow's game against Academia Palermo FC.
+      payload_hash: 0d2b6e91
+  - key: a-8990
+    flow_label: Cobranzas
+    node: Recordatorio de saldo
+    title: Recordatorio de saldo a Riverside FC Academy
+    status: approved
+    risk: external
+    requested_by: Flow · Cobranzas
+    trip: t-2715
+    created_at: '2026-10-21T09:00:00-03:00'
+    expires_at: '2026-10-22T09:00:00-03:00'
+    assignee_role: ops
+    details:
+      summary: Saldo de USD 48.980 vencido ayer.
+      payload:
+        - label: Monto
+          value: USD 48.980
+      preview: null
+      payload_hash: 4ac81f20
+    decided_by: martin.rios
+    decided_at: '2026-10-21T09:20:00-03:00'
+  - key: a-8987
+    flow: inbound-inquiry
+    flow_label: Consulta entrante
+    node: Aprobación de ops
+    title: Descuento del 10% pedido por Granite Bay
+    status: rejected
+    risk: external
+    requested_by: Agente de ventas
+    created_at: '2026-10-20T13:00:00-03:00'
+    expires_at: '2026-10-22T13:00:00-03:00'
+    assignee_role: ops
+    details:
+      summary: El coach pidió descuento por grupo grande. Fuera de política (máx. 5%).
+      payload:
+        - label: Descuento
+          value: 10%
+      preview: null
+      payload_hash: 9e77d3c5
+    decided_by: lucia.fernandez
+    decided_at: '2026-10-20T15:42:00-03:00'
+    comment: Ofrecer 5% + clínica gratis.
+executions:
+  # Lakeshore's inquiry, parked on the ops approval (a-9003). Dana wrote on the web chat at 07:38;
+  # the sales agent qualified the request, created the lead, drafted IGS-2711 and asked ops to review.
+  - key: ex-lak-inbound
+    flow: inbound-inquiry
+    trigger_kind: chat
+    trigger_payload:
+      channel: web
+      conversationId: conv-lak-web
+      name: Dana Whitfield
+    status: waiting
+    subject: {trip: t-2711}
+    started_at: '2026-10-22T07:38:00-03:00'
+    vars:
+      lead_id: "@lead:l-508"
+      trip_id: "@trip:t-2711"
+      coach_email: dwhitfield@lakeshore.example
+    node_runs:
+      - node: greet
+        type: say
+        status: succeeded
+        started_at: '2026-10-22T07:38:00-03:00'
+        finished_at: '2026-10-22T07:38:01-03:00'
+        output: {text: "Hi Dana! I'm the Infinity Global Sports concierge — happy to help with your tour."}
+      - node: qualify
+        type: agent
+        status: succeeded
+        started_at: '2026-10-22T07:38:01-03:00'
+        finished_at: '2026-10-22T07:52:30-03:00'
+        output:
+          coachName: Dana Whitfield
+          email: dwhitfield@lakeshore.example
+          organization: Lakeshore University
+          sport: soccer
+          gender: women
+          ageGroup: college
+          levelScore: 7
+          groupSize: 24
+          destinationCountry: Argentina
+          travelStart: '2027-03-06'
+          durationDays: 10
+          budgetPerPersonUsd: 2900
+          goals: One tough opponent, one easier game, a community service day; formal proposal for the Oct 28 budget meeting.
+      - node: create_lead
+        type: action
+        status: succeeded
+        started_at: '2026-10-22T07:52:30-03:00'
+        finished_at: '2026-10-22T07:52:31-03:00'
+        output: {id: "@lead:l-508"}
+      - node: remember_lead
+        type: set
+        status: succeeded
+        started_at: '2026-10-22T07:52:31-03:00'
+        finished_at: '2026-10-22T07:52:31-03:00'
+        output: {lead_id: "@lead:l-508", coach_email: dwhitfield@lakeshore.example}
+      - node: draft_trip
+        type: action
+        status: succeeded
+        started_at: '2026-10-22T07:52:31-03:00'
+        finished_at: '2026-10-22T08:09:58-03:00'
+        output: {id: "@trip:t-2711", code: IGS-2711, pricePerPersonUsd: 2890}
+      - node: remember_trip
+        type: set
+        status: succeeded
+        started_at: '2026-10-22T08:09:58-03:00'
+        finished_at: '2026-10-22T08:09:58-03:00'
+        output: {trip_id: "@trip:t-2711"}
+      - node: tell_in_review
+        type: say
+        status: succeeded
+        started_at: '2026-10-22T08:09:58-03:00'
+        finished_at: '2026-10-22T08:09:59-03:00'
+        output: {text: "I've drafted proposal IGS-2711 and an ops coordinator is reviewing it now."}
+      - node: ops_review
+        type: approval
+        status: waiting
+        started_at: '2026-10-22T08:10:00-03:00'
+        input:
+          title: Review proposal for Lakeshore University
+          approval_id: "@approval:a-9003"
+          expires_at: '2026-10-24T08:10:00-03:00'
+  # Finished runs, so every flow shows a short history next to the parked Lakeshore inquiry.
+  - key: ex-nf-predeparture
+    flow: pre-departure-check
+    trigger_kind: event
+    trigger_payload:
+      event: trip.status_changed
+      trip: {id: "@trip:t-2709", status: confirmed}
+      previousStatus: proposed
+    status: succeeded
+    subject: {trip: t-2709}
+    started_at: '2026-08-20T10:00:00-03:00'
+    finished_at: '2026-09-20T10:05:00-03:00'
+    vars: {}
+    node_runs:
+      - node: check_documents_now
+        type: action
+        status: succeeded
+        started_at: '2026-08-20T10:00:00-03:00'
+        finished_at: '2026-08-20T10:00:01-03:00'
+        output: {open: 0, travelers: 26}
+      - node: documents_open_now
+        type: condition
+        status: succeeded
+        started_at: '2026-08-20T10:00:01-03:00'
+        finished_at: '2026-08-20T10:00:01-03:00'
+        output: {result: false}
+      - node: wait_until_t_minus_30
+        type: wait
+        status: succeeded
+        started_at: '2026-08-20T10:00:01-03:00'
+        finished_at: '2026-09-18T10:00:00-03:00'
+      - node: reload_trip
+        type: action
+        status: succeeded
+        started_at: '2026-09-18T10:00:00-03:00'
+        finished_at: '2026-09-18T10:00:01-03:00'
+        output: {id: "@trip:t-2709", code: IGS-2709, status: confirmed}
+      - node: still_confirmed
+        type: condition
+        status: succeeded
+        started_at: '2026-09-18T10:00:01-03:00'
+        finished_at: '2026-09-18T10:00:01-03:00'
+        output: {result: true}
+      - node: check_documents
+        type: action
+        status: succeeded
+        started_at: '2026-09-18T10:00:01-03:00'
+        finished_at: '2026-09-18T10:00:02-03:00'
+        output: {open: 0, travelers: 26}
+      - node: documents_open
+        type: condition
+        status: succeeded
+        started_at: '2026-09-18T10:00:02-03:00'
+        finished_at: '2026-09-18T10:00:02-03:00'
+        output: {result: false}
+      - node: request_confirmations
+        type: action
+        status: succeeded
+        started_at: '2026-09-18T10:00:02-03:00'
+        finished_at: '2026-09-18T10:00:04-03:00'
+        output: {requested: 9}
+      - node: give_providers_48h
+        type: wait
+        status: succeeded
+        started_at: '2026-09-18T10:00:04-03:00'
+        finished_at: '2026-09-20T10:00:04-03:00'
+      - node: list_unconfirmed
+        type: action
+        status: succeeded
+        started_at: '2026-09-20T10:00:04-03:00'
+        finished_at: '2026-09-20T10:00:05-03:00'
+        output: {items: []}
+      - node: anything_missing
+        type: condition
+        status: succeeded
+        started_at: '2026-09-20T10:00:05-03:00'
+        finished_at: '2026-09-20T10:00:05-03:00'
+        output: {result: false}
+      - node: all_confirmed
+        type: end
+        status: succeeded
+        started_at: '2026-09-20T10:00:05-03:00'
+        finished_at: '2026-09-20T10:05:00-03:00'
+  - key: ex-nf-report-d3
+    flow: post-match-report
+    trigger_kind: event
+    trigger_payload:
+      event: trip_item.status_changed
+      item:
+        tripId: "@trip:t-2709"
+        kind: match
+        status: confirmed
+        day: 3
+        title: vs Club Social Villa Urquiza
+        opponentName: Club Social Villa Urquiza
+        result: Northfield 2-1 Villa Urquiza
+    status: succeeded
+    subject: {trip: t-2709}
+    started_at: '2026-10-21T22:08:00-03:00'
+    finished_at: '2026-10-21T22:10:00-03:00'
+    vars: {}
+    node_runs:
+      - node: load_trip
+        type: action
+        status: succeeded
+        started_at: '2026-10-21T22:08:00-03:00'
+        finished_at: '2026-10-21T22:08:01-03:00'
+        output: {id: "@trip:t-2709", code: IGS-2709, title: "Northfield College Men's Soccer · Buenos Aires 2026"}
+      - node: opponent_context
+        type: knowledge_search
+        status: succeeded
+        started_at: '2026-10-21T22:08:01-03:00'
+        finished_at: '2026-10-21T22:08:02-03:00'
+        output: {hits: 2}
+      - node: write_report
+        type: agent
+        status: succeeded
+        started_at: '2026-10-21T22:08:02-03:00'
+        finished_at: '2026-10-21T22:09:40-03:00'
+        output:
+          subject: "Match report: Northfield 2-1 Club Social Villa Urquiza"
+          body: Strong second half after a nervy start; the press forced both goals. Villa Urquiza's
+            direct balls caused trouble early, so the back line's spacing is worth a look before day 6.
+      - node: email_coach
+        type: send_message
+        status: succeeded
+        started_at: '2026-10-21T22:09:40-03:00'
+        finished_at: '2026-10-21T22:10:00-03:00'
+        output: {to: rmitchell@northfield.example, status: queued}
+      - node: sent
+        type: end
+        status: succeeded
+        started_at: '2026-10-21T22:10:00-03:00'
+        finished_at: '2026-10-21T22:10:00-03:00'
+activity:
+  - key: ev-1
+    at: '2026-10-22T09:58:00-03:00'
+    actor_type: agent
+    actor_name: Agente de operaciones
+    text: Detectó que Árbitros AFA no tiene terna a las 17:00 y pidió aprobación para mover el partido
+      a las 18:30.
+    trip: t-2709
+  - key: ev-2
+    at: '2026-10-22T09:41:00-03:00'
+    actor_type: agent
+    actor_name: Agente de ventas
+    text: Calificó a Brookfield University (D1, 25 viajeros) y armó la propuesta IGS-2731.
+    lead: l-501
+  - key: ev-3
+    at: '2026-10-22T08:05:00-03:00'
+    actor_type: agent
+    actor_name: Agente de ventas
+    text: Respondió a Cedar Ridge HS sobre seguro médico para menores citando la política de seguridad.
+    lead: l-502
+  - key: ev-4
+    at: '2026-10-22T08:10:00-03:00'
+    actor_type: agent
+    actor_name: Agente de ventas
+    text: Armó la propuesta IGS-2711 desde el chat de Dana Whitfield y pidió aprobación a ops para enviarla.
+    trip: t-2711
+  - key: ev-5
+    at: '2026-10-21T22:10:00-03:00'
+    actor_type: agent
+    actor_name: Agente de reportes
+    text: Generó el reporte del partido Northfield 2-1 Villa Urquiza.
+    trip: t-2709
+  - key: ev-6
+    at: '2026-10-21T19:30:00-03:00'
+    actor_type: user
+    actor_name: Lucía Fernández
+    text: Confirmó la clínica comunitaria del día 4.
+    trip: t-2709
+  - key: ev-7
+    at: '2026-10-21T09:20:00-03:00'
+    actor_type: user
+    actor_name: Martín Ríos
+    text: Aprobó el recordatorio de saldo a Riverside FC Academy.
+    trip: t-2715

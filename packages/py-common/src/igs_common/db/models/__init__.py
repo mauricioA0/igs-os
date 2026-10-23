@@ -1,0 +1,81 @@
+"""All ORM models. Importing this module registers every table on `Base.metadata`."""
+
+from igs_common.db.models.accounts import (
+    Account,
+    AccountBrief,
+    AccountFact,
+    Interaction,
+    Stakeholder,
+)
+from igs_common.db.models.catalog import Experience, Opponent, Provider
+from igs_common.db.models.flows import (
+    Approval,
+    Flow,
+    FlowExecution,
+    FlowNodeRun,
+    FlowTrigger,
+    FlowVersion,
+)
+from igs_common.db.models.ops import (
+    AgentRun,
+    AgentStep,
+    AuditLog,
+    Document,
+    DocumentChunk,
+    IngestionJob,
+    LlmSpendDaily,
+    OutboxEvent,
+    RetrievalEvalRun,
+)
+from igs_common.db.models.sales import (
+    Contact,
+    Conversation,
+    Incident,
+    Lead,
+    LeadIntake,
+    Message,
+    Traveler,
+    TravelerDocument,
+    Trip,
+    TripItem,
+)
+from igs_common.db.models.tenancy import ApiKey, Tenant, User
+
+__all__ = [
+    "Account",
+    "AccountBrief",
+    "AccountFact",
+    "AgentRun",
+    "AgentStep",
+    "ApiKey",
+    "Approval",
+    "AuditLog",
+    "Contact",
+    "Conversation",
+    "Document",
+    "DocumentChunk",
+    "Experience",
+    "Flow",
+    "FlowExecution",
+    "FlowNodeRun",
+    "FlowTrigger",
+    "FlowVersion",
+    "Incident",
+    "IngestionJob",
+    "Interaction",
+    "Lead",
+    "LeadIntake",
+    "LlmSpendDaily",
+    "Message",
+    "Opponent",
+    "OutboxEvent",
+    "Provider",
+    "RetrievalEvalRun",
+    "Stakeholder",
+    "Tenant",
+    "Traveler",
+    "TravelerDocument",
+    "Trip",
+    "TripItem",
+    "User",
+]

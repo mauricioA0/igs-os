@@ -1,0 +1,13 @@
+# Demo: one replica each, Spot capacity (Autopilot), smallest requests that stay healthy.
+server:
+  replicaCount: 1
+  nodeSelector:
+    cloud.google.com/gke-spot: "true"
+  terminationGracePeriodSeconds: 25 # Spot gives ~30s notice
+admintools:
+  nodeSelector:
+    cloud.google.com/gke-spot: "true"
+web:
+  replicaCount: 1
+  nodeSelector:
+    cloud.google.com/gke-spot: "true"

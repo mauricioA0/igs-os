@@ -1,0 +1,114 @@
+# IGS Temporal workers, one Deployment per task queue so each scales on its own backlog (KEDA).
+# Workers only long-poll Temporal: no Service, no inbound traffic.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: igs-worker
+  namespace: igs-workers
+data:
+  ENVIRONMENT: production
+  TEMPORAL_ADDRESS: temporal-frontend.temporal.svc.cluster.local:7233
+  TEMPORAL_NAMESPACE: igs
+  IGS_TEMPORAL_CODEC_KEY_ID: k1
+  # Cloud Run models service (BGE-M3 + reranker); called with a Google ID token.
+  IGS_MODELS_URL: https://igs-models.example.run.app # replaced per env
+  IGS_VECTOR_STORE: pgvector
+  # Same spend fuse as the API (Terraform llm_daily_budget_usd); the table is shared.
+  IGS_LLM_DAILY_BUDGET_USD: "10"
+  IGS_LLM_MAX_OUTPUT_TOKENS: "2000"
+  OTEL_ENABLED: "true"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: igs-worker-flows
+  namespace: igs-workers
+  labels: &labels
+    app.kubernetes.io/name: igs-worker
+    app.kubernetes.io/component: flows
+    app.kubernetes.io/part-of: igs-os
+spec:
+  replicas: 1 # KEDA owns the count once the ScaledObject exists
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: igs-worker
+      app.kubernetes.io/component: flows
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      serviceAccountName: igs-worker
+      automountServiceAccountToken: false
+      # Temporal finishes in-flight activities on SIGTERM; leave room for one activity timeout.
+      terminationGracePeriodSeconds: 60
+      securityContext: &podsec
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: worker
+          image: igs-worker # set by kustomize images / the deploy pipeline
+          args: ["--queue", "flows"]
+          envFrom:
+            - configMapRef: { name: igs-worker }
+            - secretRef: { name: igs-worker } # DATABASE_URL, IGS_TEMPORAL_CODEC_KEY, OPENAI_API_KEY
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { memory: 1Gi }
+          securityContext: &ctsec
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: tmp, emptyDir: { sizeLimit: 256Mi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: igs-worker-ingestion
+  namespace: igs-workers
+  labels: &labels
+    app.kubernetes.io/name: igs-worker
+    app.kubernetes.io/component: ingestion
+    app.kubernetes.io/part-of: igs-os
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: igs-worker
+      app.kubernetes.io/component: ingestion
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      serviceAccountName: igs-worker
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120 # parsing + batch embedding can run longer
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: worker
+          image: igs-worker
+          args: ["--queue", "ingestion"]
+          envFrom:
+            - configMapRef: { name: igs-worker }
+            - secretRef: { name: igs-worker }
+          resources:
+            requests: { cpu: 500m, memory: 1Gi } # PDF parsing holds whole documents in memory
+            limits: { memory: 2Gi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: tmp, emptyDir: { sizeLimit: 1Gi } }

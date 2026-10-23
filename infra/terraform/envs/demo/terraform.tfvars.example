@@ -1,0 +1,5 @@
+billing_account = "XXXXXX-XXXXXX-XXXXXX"
+alert_email     = "you@example.com"
+web_origins     = ["https://igs-os.vercel.app"]
+# Your IP for kubectl/helm against the private-node cluster's public control plane.
+gke_authorized_networks = { operator = "203.0.113.10/32" }

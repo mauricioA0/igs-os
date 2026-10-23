@@ -1,0 +1,28 @@
+From: Front Desk <frontdesk@infinityglobalsports.example>
+To: sales@infinityglobalsports.example
+Subject: FW: Rugby tour
+Date: Thu, 22 Oct 2026 11:00:00 -0400
+Message-ID: <outlook-attached-0003@infinityglobalsports.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="XYZ"
+
+--XYZ
+Content-Type: text/plain; charset="utf-8"
+
+See attached, came to the general inbox.
+
+--XYZ
+Content-Type: message/rfc822
+
+From: Tom Becker <tbecker@pinevalley.example>
+To: info@infinityglobalsports.example
+Subject: Rugby tour
+Date: Tue, 20 Oct 2026 08:30:00 -0700
+Message-ID: <inner-0003@pinevalley.example>
+Content-Type: text/plain; charset="utf-8"
+
+Hello, Pine Valley College men's rugby here. 30 players, looking at Argentina in
+June 2027, 9 days. What would that look like?
+
+Tom Becker
+--XYZ--

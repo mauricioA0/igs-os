@@ -1,0 +1,397 @@
+{
+  "$schema": "../flow.schema.json",
+  "schemaVersion": "1",
+  "id": "pre-departure-check",
+  "name": "Pre-departure check: travel documents + providers",
+  "description": "When a trip is confirmed, check every traveler's entry documents (passport validity, e-Visa, parental consent for minors, insurance) and hand what's open to ops. At 30 days before departure, check documents again, ask every provider to confirm, give them 48 hours, and escalate whatever is still open.",
+  "version": null,
+  "trigger": {
+    "type": "event",
+    "event": "trip.status_changed",
+    "filter": "trigger.trip.status == 'confirmed' && trigger.previousStatus != 'confirmed'"
+  },
+  "entry": "check_documents_now",
+  "variables": [
+    {
+      "name": "departure",
+      "type": "timestamp"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "check_documents_now",
+      "type": "action",
+      "name": "Check travel documents (at confirmation)",
+      "config": {
+        "action": "check_trip_readiness",
+        "inputs": {
+          "tripId": "{{ trigger.trip.id }}"
+        }
+      },
+      "retry": {
+        "maxAttempts": 5
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "documents_open_now",
+      "type": "condition",
+      "name": "Documents still open?",
+      "config": {
+        "expression": "!nodes.check_documents_now.output.ready"
+      },
+      "position": {
+        "x": 0,
+        "y": 120
+      }
+    },
+    {
+      "id": "task_documents_now",
+      "type": "action",
+      "name": "Hand open documents to ops",
+      "config": {
+        "action": "create_ops_task",
+        "inputs": {
+          "title": "Collect travel documents: {{ string(nodes.check_documents_now.output.openItems) }} open",
+          "tripId": "{{ trigger.trip.id }}",
+          "summary": "{{ nodes.check_documents_now.output.summary }}",
+          "travelers": "{{ nodes.check_documents_now.output.notReady }}",
+          "nextDueOn": "{{ nodes.check_documents_now.output.nextDueOn }}",
+          "priority": "{{ nodes.check_documents_now.output.overdueItems > 0 ? 'high' : 'normal' }}"
+        }
+      },
+      "position": {
+        "x": -220,
+        "y": 240
+      }
+    },
+    {
+      "id": "wait_until_t_minus_30",
+      "type": "wait",
+      "name": "Wait until 30 days before departure",
+      "config": {
+        "mode": "until",
+        "until": "{{ timestamp(trigger.trip.startDate + 'T09:00:00-03:00') - duration('720h') }}"
+      },
+      "position": {
+        "x": 0,
+        "y": 360
+      }
+    },
+    {
+      "id": "reload_trip",
+      "type": "action",
+      "name": "Reload trip (it may have changed while waiting)",
+      "config": {
+        "action": "get_trip",
+        "inputs": {
+          "tripId": "{{ trigger.trip.id }}"
+        }
+      },
+      "retry": {
+        "maxAttempts": 5
+      },
+      "position": {
+        "x": 0,
+        "y": 480
+      }
+    },
+    {
+      "id": "still_confirmed",
+      "type": "condition",
+      "config": {
+        "expression": "nodes.reload_trip.output.status == 'confirmed'"
+      },
+      "position": {
+        "x": 0,
+        "y": 600
+      }
+    },
+    {
+      "id": "check_documents",
+      "type": "action",
+      "name": "Re-check travel documents (T-30)",
+      "config": {
+        "action": "check_trip_readiness",
+        "inputs": {
+          "tripId": "{{ trigger.trip.id }}"
+        }
+      },
+      "retry": {
+        "maxAttempts": 5
+      },
+      "position": {
+        "x": 0,
+        "y": 720
+      }
+    },
+    {
+      "id": "documents_open",
+      "type": "condition",
+      "name": "Documents still open?",
+      "config": {
+        "expression": "!nodes.check_documents.output.ready"
+      },
+      "position": {
+        "x": 0,
+        "y": 840
+      }
+    },
+    {
+      "id": "escalate_documents",
+      "type": "action",
+      "name": "Escalate open documents",
+      "config": {
+        "action": "create_ops_task",
+        "inputs": {
+          "title": "{{ string(nodes.check_documents.output.openItems) }} travel documents still open for {{ nodes.reload_trip.output.title }}",
+          "tripId": "{{ trigger.trip.id }}",
+          "summary": "{{ nodes.check_documents.output.summary }}",
+          "travelers": "{{ nodes.check_documents.output.notReady }}",
+          "priority": "high",
+          "dueAt": "{{ execution.now + duration('48h') }}"
+        }
+      },
+      "position": {
+        "x": -220,
+        "y": 960
+      }
+    },
+    {
+      "id": "request_confirmations",
+      "type": "action",
+      "config": {
+        "action": "request_provider_confirmations",
+        "inputs": {
+          "tripId": "{{ trigger.trip.id }}",
+          "onlyStatuses": [
+            "pending"
+          ],
+          "replyBy": "{{ execution.now + duration('48h') }}"
+        }
+      },
+      "retry": {
+        "maxAttempts": 5,
+        "initialInterval": "PT10S",
+        "maxInterval": "PT5M"
+      },
+      "position": {
+        "x": 0,
+        "y": 1080
+      }
+    },
+    {
+      "id": "give_providers_48h",
+      "type": "wait",
+      "config": {
+        "mode": "duration",
+        "duration": "P2D"
+      },
+      "position": {
+        "x": 0,
+        "y": 1200
+      }
+    },
+    {
+      "id": "list_unconfirmed",
+      "type": "action",
+      "config": {
+        "action": "list_trip_items",
+        "inputs": {
+          "tripId": "{{ trigger.trip.id }}",
+          "statuses": [
+            "pending",
+            "requested"
+          ],
+          "withProvider": true
+        }
+      },
+      "position": {
+        "x": 0,
+        "y": 1320
+      }
+    },
+    {
+      "id": "anything_missing",
+      "type": "condition",
+      "config": {
+        "expression": "size(nodes.list_unconfirmed.output.items) > 0"
+      },
+      "position": {
+        "x": 0,
+        "y": 1440
+      }
+    },
+    {
+      "id": "escalate",
+      "type": "action",
+      "config": {
+        "action": "create_ops_task",
+        "inputs": {
+          "title": "{{ string(size(nodes.list_unconfirmed.output.items)) }} unconfirmed items for {{ nodes.reload_trip.output.title }}",
+          "tripId": "{{ trigger.trip.id }}",
+          "items": "{{ nodes.list_unconfirmed.output.items.map(i, i.id) }}",
+          "priority": "high",
+          "dueAt": "{{ execution.now + duration('72h') }}"
+        }
+      },
+      "position": {
+        "x": -220,
+        "y": 1560
+      }
+    },
+    {
+      "id": "notify_ops",
+      "type": "send_message",
+      "config": {
+        "channel": "ops_inbox",
+        "to": "ops",
+        "subject": "Unconfirmed providers: {{ nodes.reload_trip.output.title }}",
+        "body": "Departure {{ nodes.reload_trip.output.startDate }}. Still unconfirmed: {{ nodes.list_unconfirmed.output.items.map(i, i.title + ' (' + i.providerName + ')').join(', ') }}."
+      },
+      "onError": "continue",
+      "position": {
+        "x": -220,
+        "y": 1680
+      }
+    },
+    {
+      "id": "all_confirmed",
+      "type": "end",
+      "config": {
+        "output": {
+          "unconfirmed": 0
+        }
+      },
+      "position": {
+        "x": 220,
+        "y": 1560
+      }
+    },
+    {
+      "id": "escalated",
+      "type": "end",
+      "config": {
+        "output": {
+          "unconfirmed": "{{ size(nodes.list_unconfirmed.output.items) }}"
+        }
+      },
+      "position": {
+        "x": -220,
+        "y": 1800
+      }
+    },
+    {
+      "id": "trip_changed",
+      "type": "end",
+      "config": {
+        "reason": "Trip is no longer confirmed ({{ nodes.reload_trip.output.status }})"
+      },
+      "position": {
+        "x": 220,
+        "y": 600
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "check_documents_now",
+      "to": "documents_open_now"
+    },
+    {
+      "from": "documents_open_now",
+      "port": "true",
+      "to": "task_documents_now"
+    },
+    {
+      "from": "documents_open_now",
+      "port": "false",
+      "to": "wait_until_t_minus_30"
+    },
+    {
+      "from": "task_documents_now",
+      "to": "wait_until_t_minus_30"
+    },
+    {
+      "from": "wait_until_t_minus_30",
+      "to": "reload_trip"
+    },
+    {
+      "from": "reload_trip",
+      "to": "still_confirmed"
+    },
+    {
+      "from": "still_confirmed",
+      "port": "true",
+      "to": "check_documents"
+    },
+    {
+      "from": "still_confirmed",
+      "port": "false",
+      "to": "trip_changed"
+    },
+    {
+      "from": "check_documents",
+      "to": "documents_open"
+    },
+    {
+      "from": "documents_open",
+      "port": "true",
+      "to": "escalate_documents"
+    },
+    {
+      "from": "documents_open",
+      "port": "false",
+      "to": "request_confirmations"
+    },
+    {
+      "from": "escalate_documents",
+      "to": "request_confirmations"
+    },
+    {
+      "from": "request_confirmations",
+      "to": "give_providers_48h"
+    },
+    {
+      "from": "give_providers_48h",
+      "to": "list_unconfirmed"
+    },
+    {
+      "from": "list_unconfirmed",
+      "to": "anything_missing"
+    },
+    {
+      "from": "anything_missing",
+      "port": "true",
+      "to": "escalate"
+    },
+    {
+      "from": "anything_missing",
+      "port": "false",
+      "to": "all_confirmed"
+    },
+    {
+      "from": "escalate",
+      "to": "notify_ops"
+    },
+    {
+      "from": "notify_ops",
+      "to": "escalated"
+    }
+  ],
+  "settings": {
+    "timeout": "P400D",
+    "concurrency": {
+      "key": "{{ trigger.trip.id }}",
+      "mode": "replace"
+    },
+    "dedupe": {
+      "key": "{{ trigger.eventId }}",
+      "window": "P7D"
+    },
+    "errorFlow": "notify-ops-on-failure"
+  }
+}

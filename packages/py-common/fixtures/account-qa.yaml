@@ -1,0 +1,259 @@
+# Golden Q&A for Account 360 evals (retrieval + answer grounding).
+# `sources` = interaction keys from accounts.yaml that must be retrieved (recall@k) and cited.
+# `answer` = the reference facts a judge checks for; wording may differ. Demo "today" is 2026-10-22.
+# `account` is null for cross-account questions. `lang` is the question language.
+version: 1
+questions:
+  # ── Lakeshore University ───────────────────────────────────────────────
+  - id: q01
+    account: acc-lakeshore
+    lang: en
+    question: How is Lakeshore University doing?
+    answer: Health red. Proposal IGS-2711 (Buenos Aires, March 6–15 2027, 24 travelers, USD 2,890 pp) is drafted and waiting for ops approval to be sent. The team's enrollment fees (24 × US$95 = US$2,280) due Oct 15 haven't been paid and the hotel releases the March blocks on Oct 31; Robert Haines decides by Oct 31 and is comparing a USD 2,750 competitor quote.
+    sources: [int-lak-07, int-lak-10, int-lak-12]
+  - id: q02
+    account: acc-lakeshore
+    lang: en
+    question: Who makes the final decision at Lakeshore?
+    answer: Robert Haines, Senior Associate Athletic Director — signs contracts and purchase orders.
+    sources: [int-lak-02]
+  - id: q03
+    account: acc-lakeshore
+    lang: es
+    question: ¿Por qué Lakeshore no pagó la inscripción?
+    answer: Empezó el año fiscal el 1/10 y la línea de presupuesto cambió, así que Haines tiene que re-aprobar la PO; antes quiere ver la propuesta formal en la reunión de presupuesto del 28/10.
+    sources: [int-lak-07, int-lak-08]
+  - id: q04
+    account: acc-lakeshore
+    lang: en
+    question: What happens if Lakeshore's enrollment fees don't arrive?
+    answer: The hotel releases the March 6–15 hotel and field blocks on October 31 (spring break is peak season).
+    sources: [int-lak-02, int-lak-03, int-lak-08]
+  - id: q05
+    account: acc-lakeshore
+    lang: en
+    question: What dietary needs does the Lakeshore team have?
+    answer: Two players gluten-free and one vegetarian.
+    sources: [int-lak-05]
+  - id: q06
+    account: acc-lakeshore
+    lang: en
+    question: What time does the Lakeshore team land in Buenos Aires?
+    answer: March 6, 2027 at 08:40 at EZE (Delta via Atlanta, tentative); departing March 15 at 21:15.
+    sources: [int-lak-04]
+  - id: q07
+    account: acc-lakeshore
+    lang: es
+    question: ¿Contra quién juega Lakeshore en marzo?
+    answer: Escuela de Fútbol Femenino Sur (nivel 5) el día 3, Deportivo Belgrano Femenino (nivel 7) el día 5 y la Selección Universitaria Femenina (nivel 6, tentativa) el día 8.
+    sources: [int-lak-09]
+  - id: q08
+    account: acc-lakeshore
+    lang: en
+    question: What does Lakeshore need before signing?
+    answer: Registered vendor through procurement, certificate of insurance naming Lakeshore as additional insured, a USD price lock, and a formal proposal with inclusions and cancellation terms to compare against the competitor quote.
+    sources: [int-lak-02, int-lak-04, int-lak-10]
+
+  # ── Northfield College ─────────────────────────────────────────────────
+  - id: q09
+    account: acc-northfield
+    lang: en
+    question: How is the Northfield tour going?
+    answer: On tour now (Oct 18–27). Arrived 3 h late, won the first match 2-1 vs Villa Urquiza, one player with a mild ankle sprain, day-6 match moved to 18:30 for referee availability. Coach very happy.
+    sources: [int-nor-05, int-nor-06, int-nor-07, int-nor-08]
+  - id: q10
+    account: acc-northfield
+    lang: en
+    question: Does Northfield owe us any money?
+    answer: No — paid in full (USD 72,540) in August.
+    sources: [int-nor-03]
+  - id: q11
+    account: acc-northfield
+    lang: es
+    question: ¿Qué pasó con el jugador lesionado de Northfield?
+    answer: Esguince leve de tobillo en el entrenamiento; radiografía bien, cubierto por el seguro; se pierde el primer partido y probablemente vuelve el día 6.
+    sources: [int-nor-06]
+  - id: q12
+    account: acc-northfield
+    lang: en
+    question: Did Coach Mitchell agree to change the kickoff time?
+    answer: Yes, 18:30 instead of 17:00, keeping dinner after.
+    sources: [int-nor-08]
+  - id: q13
+    account: acc-northfield
+    lang: en
+    question: Who at Northfield needs a report after the trip?
+    answer: Susan Park, Director of Athletics, wants a short post-tour summary for the board.
+    sources: [int-nor-02]
+  - id: q14
+    account: acc-northfield
+    lang: en
+    question: Did Northfield refer anyone to us?
+    answer: Coach Mitchell referred Coach Liam O'Connor of Maple Grove College (men's rugby), looking at Argentina in August 2027.
+    sources: [int-nor-09]
+  - id: q15
+    account: acc-northfield
+    lang: en
+    question: What did the Northfield parents ask for?
+    answer: Daily photos, whether families can send care packages to the hotel, and the emergency number.
+    sources: [int-nor-04]
+
+  # ── Riverside FC Academy ──────────────────────────────────────────────
+  - id: q16
+    account: acc-riverside
+    lang: en
+    question: What's blocking the Riverside trip?
+    answer: Six Brazilian e-visas (5 players, 1 chaperone) were still pending as of Oct 14; the remaining balance USD 18,972 is due by Nov 5.
+    sources: [int-riv-04, int-riv-05, int-riv-07]
+  - id: q17
+    account: acc-riverside
+    lang: en
+    question: Who signs for Riverside FC Academy?
+    answer: Elena Vasquez, Club Director.
+    sources: [int-riv-01]
+  - id: q18
+    account: acc-riverside
+    lang: es
+    question: ¿Cuánto pagó Riverside hasta ahora?
+    answer: USD 20.988 en julio (los 22 fees de inscripción y las primeras cuotas de US$500) y un primer giro de USD 30.000 el 21/10; faltan USD 18.972 para el 5/11.
+    sources: [int-riv-02, int-riv-07]
+  - id: q19
+    account: acc-riverside
+    lang: en
+    question: Are Riverside's consent forms complete?
+    answer: Yes, consent forms are 100% collected.
+    sources: [int-riv-04]
+  - id: q20
+    account: acc-riverside
+    lang: en
+    question: What change did Coach Hale request?
+    answer: An extra match against a Brazilian side instead of the beach futevôlei afternoon; pending confirmation with Elena because it may change the price.
+    sources: [int-riv-08]
+  - id: q21
+    account: acc-riverside
+    lang: en
+    question: Who tracks visas and consent forms at Riverside?
+    answer: Grace Liu, Team Manager / Parent Liaison.
+    sources: [int-riv-04, int-riv-03]
+
+  # ── Brookfield University ─────────────────────────────────────────────
+  - id: q22
+    account: acc-brookfield
+    lang: en
+    question: Who decides on the Brookfield tour and when?
+    answer: Jamal Reed, Associate AD, at the athletics budget meeting on November 15; compliance (Laura Chen) must approve first.
+    sources: [int-bro-02]
+  - id: q23
+    account: acc-brookfield
+    lang: en
+    question: Who are we competing with at Brookfield?
+    answer: A Spain tour from another operator at USD 3,100 per person.
+    sources: [int-bro-01, int-bro-02]
+  - id: q24
+    account: acc-brookfield
+    lang: es
+    question: ¿Qué necesita compliance de Brookfield?
+    answer: Itinerario, lista de rivales, comprobante de seguro y confirmación de que no habrá contacto de reclutamiento durante la gira, antes del 15/11.
+    sources: [int-bro-04, int-bro-08]
+  - id: q25
+    account: acc-brookfield
+    lang: en
+    question: What does Brookfield need from the video analysis package?
+    answer: Number of camera angles, raw files the same night, export to their video platform; same-night footage is a must.
+    sources: [int-bro-07]
+  - id: q26
+    account: acc-brookfield
+    lang: en
+    question: How did the Brookfield relationship start?
+    answer: Sarah Okafor met IGS at a coaching convention booth in January 2026; Sofía followed up with sample itineraries in February.
+    sources: [int-bro-05, int-bro-06]
+  - id: q27
+    account: acc-brookfield
+    lang: es
+    question: ¿Conocemos al que decide en Brookfield?
+    answer: No, todavía no hablamos con Jamal Reed; hay que pedir reunión antes del 15/11.
+    sources: [int-bro-03]
+
+  # ── Westbrook College ─────────────────────────────────────────────────
+  - id: q28
+    account: acc-westbrook
+    lang: en
+    question: How is the Westbrook deal going?
+    answer: Proposal sent; Coach Lawson accepted a revised option at USD 2,550 pp with three matches; AD Rachel Moore decides in early November after reviewing insurance and the safety plan (sent Oct 21, no reply yet); competing Netherlands trip.
+    sources: [int-wes-05, int-wes-07, int-wes-08, int-wes-02]
+  - id: q29
+    account: acc-westbrook
+    lang: en
+    question: What did we remove to lower the Westbrook price?
+    answer: The Tigre Delta trip and the tango class, and added a third match — about USD 2,550 per person.
+    sources: [int-wes-03, int-wes-04]
+  - id: q30
+    account: acc-westbrook
+    lang: es
+    question: ¿Cuál es el precio mínimo para Westbrook?
+    answer: No bajar de USD 2.500 por persona (margen mínimo).
+    sources: [int-wes-03]
+  - id: q31
+    account: acc-westbrook
+    lang: en
+    question: What does Westbrook's AD care about?
+    answer: Safety and insurance — she wants the insurance coverage and a safety plan before deciding.
+    sources: [int-wes-05, int-wes-07]
+  - id: q32
+    account: acc-westbrook
+    lang: en
+    question: What surface does Westbrook need?
+    answer: Water-based turf (Hockey Club Olivos plays on it).
+    sources: [int-wes-06]
+
+  # ── Summit Elite SC ───────────────────────────────────────────────────
+  - id: q33
+    account: acc-summit
+    lang: en
+    question: How did Summit Elite's 2026 tour go?
+    answer: Rated 9/10, survey 4.7/5; only issue a 90-minute bus delay on day 2, resolved with a USD 500 credit.
+    sources: [int-sum-03, int-sum-04, int-sum-02]
+  - id: q34
+    account: acc-summit
+    lang: en
+    question: What is Summit Elite planning for 2027?
+    answer: U16 girls to Brazil around the 2027 Women's World Cup with families (about 24 players + 30 family members); board decides in December; IGS owes a family package draft before Dec 1.
+    sources: [int-sum-05, int-sum-06]
+  - id: q35
+    account: acc-summit
+    lang: es
+    question: ¿Aceptamos otro plan de pago para Summit?
+    answer: Sí, Martín aprobó el plan automático (mínimo tres pagos mensuales, entre el 1 y el 26) si se inscriben antes del 31/12; el fee de US$95 se mantiene y el saldo vence 110 días antes.
+    sources: [int-sum-08, int-sum-07]
+  - id: q36
+    account: acc-summit
+    lang: en
+    question: Who raised the complaint on the Summit trip?
+    answer: Sandra Lopez, the parent liaison, about the day-2 bus delay.
+    sources: [int-sum-01]
+
+  # ── Cross-account ─────────────────────────────────────────────────────
+  - id: q37
+    account: null
+    lang: en
+    question: Which clients have money outstanding right now?
+    answer: Lakeshore (enrollment fees, 24 × US$95 = US$2,280, due Oct 15 and not paid) and Riverside (USD 18,972 due Nov 5).
+    sources: [int-lak-07, int-riv-07]
+  - id: q38
+    account: null
+    lang: es
+    question: ¿Qué decisiones de clientes se toman en noviembre?
+    answer: Brookfield (Jamal Reed, 15/11) y Westbrook (Rachel Moore, principios de noviembre).
+    sources: [int-bro-02, int-wes-05]
+  - id: q39
+    account: null
+    lang: en
+    question: Which deals are at risk from a competitor?
+    answer: Lakeshore (another operator quoted USD 2,750 pp), Brookfield (Spain tour at USD 3,100) and Westbrook (Netherlands trip).
+    sources: [int-lak-10, int-bro-01, int-wes-02]
+  - id: q40
+    account: null
+    lang: en
+    question: Which referrals came from existing clients?
+    answer: Northfield referred Maple Grove College (Liam O'Connor, rugby); Summit Elite introduced Cedar Ridge HS (Diego Alvarez, Costa Rica June 2027).
+    sources: [int-nor-09, int-sum-06]

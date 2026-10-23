@@ -1,0 +1,27 @@
+# Demo tenant and its ops team. People are fictional.
+tenant:
+  key: igs
+  slug: igs
+  name: Infinity Global Sports (demo)
+  settings:
+    timezone: America/Argentina/Buenos_Aires
+    demo: true
+    demo_today: "2026-10-22"
+
+users:
+  - key: martin.rios
+    email: martin.rios@igs-demo.example
+    name: Martín Ríos
+    role: owner
+  - key: lucia.fernandez
+    email: lucia.fernandez@igs-demo.example
+    name: Lucía Fernández
+    role: ops
+  - key: sofia.paz
+    email: sofia.paz@igs-demo.example
+    name: Sofía Paz
+    role: sales
+  - key: demo.viewer
+    email: viewer@igs-demo.example
+    name: Demo Viewer
+    role: viewer

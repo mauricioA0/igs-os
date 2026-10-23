@@ -1,0 +1,23 @@
+# The API (Cloud Run, Direct VPC egress) and the outbox dispatcher reach Temporal through an
+# internal passthrough load balancer on the gRPC port only — membership ports stay in-cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-frontend-ilb
+  namespace: temporal
+  annotations:
+    networking.gke.io/load-balancer-type: "Internal"
+spec:
+  type: LoadBalancer
+  # Replaced per env with the VPC subnet ranges that may connect (Cloud Run egress subnet).
+  loadBalancerSourceRanges:
+    - 10.10.0.0/16
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporal
+    app.kubernetes.io/component: frontend
+  ports:
+    - name: grpc-rpc
+      port: 7233
+      targetPort: 7233
+      protocol: TCP

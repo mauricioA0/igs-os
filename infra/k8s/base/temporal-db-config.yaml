@@ -1,0 +1,10 @@
+# Non-secret DB coordinates for the schema Job. The deploy pipeline overwrites `host` with the
+# Terraform output (Temporal Cloud SQL private IP). The password lives in the `temporal-db`
+# Secret, created by the pipeline from Secret Manager (never committed).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: temporal-db
+  namespace: temporal
+data:
+  host: TEMPORAL_DB_HOST

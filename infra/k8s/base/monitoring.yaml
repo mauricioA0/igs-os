@@ -1,0 +1,12 @@
+# Google Managed Prometheus: Temporal server metrics (chart exposes 9090 as port "metrics").
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: temporal-server
+  namespace: temporal
+spec:
+  selector:
+    matchLabels: { app.kubernetes.io/name: temporal }
+  endpoints:
+    - port: metrics
+      interval: 30s

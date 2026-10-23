@@ -1,0 +1,18 @@
+# Temporal server and the IGS workers live in separate namespaces so NetworkPolicies and
+# Workload Identity bindings stay narrow.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: temporal
+  labels:
+    app.kubernetes.io/part-of: igs-os
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: igs-workers
+  labels:
+    app.kubernetes.io/part-of: igs-os
+    pod-security.kubernetes.io/enforce: restricted

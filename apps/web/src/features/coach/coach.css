@@ -1,0 +1,285 @@
+/* Coach surfaces + landing, styled after infinityglobalsports.com (docs/design/igs-site-style.md).
+   `.igs-site` pins the measured site palette and the shared type utilities for this subtree, so the
+   pages render the contract whether or not the global tokens (G1) have landed. Names match the
+   shared ones on purpose: once globals.css ships them, these rules become redundant, not different. */
+/* In the components layer so Tailwind utilities on the same element still win. The order statement
+   matches Tailwind's, so it holds even when this file loads before globals.css. */
+@layer theme, base, components, utilities;
+
+@layer components {
+  .igs-site {
+    --background: #0d0d0d;
+    --foreground: #f2f2f2;
+    --card: #171717;
+    --card-foreground: #f2f2f2;
+    --popover: #171717;
+    --popover-foreground: #f2f2f2;
+    --raised: #262626;
+    --primary: #ffffff;
+    --primary-foreground: #171717;
+    --secondary: rgb(255 255 255 / 0.1);
+    --secondary-foreground: #f2f2f2;
+    --muted: #262626;
+    --muted-foreground: #999999;
+    --muted-headline: #7a7a7a;
+    --accent: rgb(255 255 255 / 0.06);
+    --accent-foreground: #f2f2f2;
+    --line: rgb(255 255 255 / 0.1);
+    --line-strong: rgb(255 255 255 / 0.2);
+    --border: var(--line);
+    --input: var(--line-strong);
+    --ring: #ffffff;
+    color-scheme: dark;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+  }
+
+  .igs-site .bg-raised {
+    background-color: var(--raised);
+  }
+  .igs-site .text-muted-headline,
+  .igs-site .headline-muted {
+    color: var(--muted-headline);
+  }
+  .igs-site .border-line {
+    border-color: var(--line);
+  }
+  .igs-site .border-line-strong {
+    border-color: var(--line-strong);
+  }
+
+  /* Typography (exact contract values). */
+  .igs-site .type-mega,
+  .igs-site .type-hero,
+  .igs-site .kpi-number {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    line-height: 0.8;
+  }
+  .igs-site .type-mega {
+    font-weight: 800; /* 900 isn't loaded; 800 is the heaviest Barlow cut we ship */
+    font-size: clamp(3rem, 8vw, 8rem);
+  }
+  .igs-site .type-hero {
+    font-weight: 800;
+    font-size: clamp(2.5rem, 4.2vw, 3.75rem);
+  }
+  .igs-site .kpi-number {
+    font-weight: 800;
+    font-size: 4rem;
+    line-height: 0.85;
+    font-variant-numeric: tabular-nums;
+  }
+  .igs-site .type-section,
+  .igs-site .type-statement,
+  .igs-site .type-card,
+  .igs-site .type-small-title {
+    font-family: var(--font-sans);
+    font-weight: 400;
+  }
+  .igs-site .type-section {
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+  }
+  .igs-site .type-statement {
+    font-size: clamp(2rem, 4.2vw, 3.75rem);
+    line-height: 1;
+    letter-spacing: -0.06em;
+  }
+  .igs-site .type-card {
+    font-size: 1.875rem;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+  .igs-site .type-small-title {
+    font-size: 1.25rem;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    text-transform: capitalize;
+  }
+  .igs-site .eyebrow-wide {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: 0.375em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 640px) {
+    .igs-site .eyebrow-wide {
+      font-size: 1.375rem;
+    }
+  }
+  .igs-site .eyebrow {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  @media (min-width: 640px) {
+    .igs-site .eyebrow {
+      font-size: 1rem;
+    }
+  }
+  .igs-site .copy-long {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: var(--muted-foreground);
+  }
+
+  /* Pills: nav items and buttons (Montserrat 600 12–14px, rounded-full, trailing arrow on CTAs). */
+  .igs-site .pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.75rem;
+    height: 2rem;
+    padding: 0 1rem;
+    transition:
+      background-color 160ms,
+      color 160ms,
+      opacity 160ms;
+  }
+  .igs-site .pill-lg {
+    font-size: 0.875rem;
+    height: 3rem;
+    padding: 0 1.5rem;
+  }
+  .igs-site .pill-md {
+    font-size: 0.8125rem;
+    height: 2.5rem;
+    padding: 0 1.25rem;
+  }
+  .igs-site .pill-primary {
+    background: #ffffff;
+    color: #171717;
+  }
+  .igs-site .pill-primary:hover {
+    background: #e6e6e6;
+  }
+  .igs-site .pill-secondary {
+    background: rgb(255 255 255 / 0.1);
+    color: rgb(255 255 255 / 0.7);
+  }
+  .igs-site .pill-secondary:hover {
+    color: #ffffff;
+    background: rgb(255 255 255 / 0.16);
+  }
+  .igs-site .pill-idle {
+    color: rgb(255 255 255 / 0.7);
+  }
+  .igs-site .pill-idle:hover {
+    color: #ffffff;
+  }
+  .igs-site .pill-active {
+    background: #ffffff;
+    color: #171717;
+  }
+  .igs-site .pill:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .igs-site .pill-arrow::after {
+    content: "→";
+    font-size: 1.1em;
+    line-height: 1;
+  }
+
+  /* Section rhythm: 56–64px vertical (40px mobile), max ~1280px, 24–32px gutters. */
+  .igs-site .site-section {
+    padding: 2.5rem 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .igs-site .site-section {
+      padding: 3.5rem 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .igs-site .site-section {
+      padding: 4rem 2rem;
+    }
+  }
+  .igs-site .site-container {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 80rem;
+  }
+
+  /* CSS-only stadium art in lieu of photography (never IGS's own images): floodlight glows, a
+     pitch arc, stand stripes and a fade to the page. Neutral, so color stays with status. */
+  .igs-site .stadium-art,
+  .stadium-art {
+    background:
+      radial-gradient(ellipse 45% 55% at 82% -8%, rgb(255 255 255 / 0.22), transparent 70%),
+      radial-gradient(ellipse 30% 40% at 12% -12%, rgb(255 255 255 / 0.12), transparent 70%),
+      radial-gradient(circle at 50% 135%, transparent 41%, rgb(255 255 255 / 0.1) 41.3%, transparent 41.8%),
+      linear-gradient(90deg, transparent calc(50% - 1px), rgb(255 255 255 / 0.07) 50%, transparent calc(50% + 1px)),
+      repeating-linear-gradient(100deg, rgb(255 255 255 / 0.025) 0 2px, transparent 2px 46px),
+      linear-gradient(180deg, #1a1a1a 0%, #111 55%, #0d0d0d 100%);
+  }
+  .igs-site .stadium-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, #0d0d0d 100%);
+    pointer-events: none;
+  }
+  .igs-site .stadium-streaks {
+    background:
+      linear-gradient(115deg, transparent 45%, rgb(255 255 255 / 0.06) 50%, transparent 55%),
+      linear-gradient(65deg, transparent 60%, rgb(255 255 255 / 0.04) 63%, transparent 66%);
+  }
+
+  /* Footer marquee: condensed uppercase phrases, paused under reduced motion. */
+  .igs-site .marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .igs-site .marquee-track {
+    display: inline-flex;
+    gap: 3rem;
+    padding-right: 3rem;
+    animation: igs-marquee 40s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .igs-site .marquee-track {
+      animation: none;
+    }
+  }
+  @keyframes igs-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media print {
+    .stadium-art,
+    .stadium-streaks {
+      background: none !important;
+    }
+    .igs-site .stadium-art::after {
+      display: none;
+    }
+    .igs-site {
+      --background: #fff;
+      --foreground: #111;
+      --card: #fff;
+      --raised: #fff;
+      --muted-foreground: #444;
+      --muted-headline: #666;
+      --line: #ccc;
+      --border: #ccc;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+# Temporal schema setup/upgrade, run by the deploy pipeline BEFORE `helm upgrade` (manageSchema
+# is off in the chart values). Idempotent: setup-schema is a no-op once the version table exists
+# (-q keeps that from failing the step); update-schema applies only missing versions.
+# The image is pinned by digest and must match server.image.tag in infra/helm/temporal.
+# Re-run: kubectl -n temporal delete job temporal-schema --ignore-not-found && kubectl apply -f …
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: temporal-schema
+  namespace: temporal
+  labels:
+    app.kubernetes.io/name: temporal-schema
+    app.kubernetes.io/part-of: igs-os
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal-schema
+    spec:
+      serviceAccountName: temporal-server
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: schema
+          # temporalio/admin-tools:1.32.0
+          image: temporalio/admin-tools@sha256:a9f84fb9a374b2374fe2e67c8efc0468ff3f1c66c8a0b14597ec86e349e62bca
+          command: ["sh", "-ec"]
+          args:
+            - |
+              root=/etc/temporal/schema/postgresql/v12
+              for pair in "temporal:temporal" "temporal_visibility:visibility"; do
+                db="${pair%%:*}"; dir="${pair##*:}"
+                echo "== $db"
+                temporal-sql-tool -q --db "$db" setup-schema -v 0.0
+                temporal-sql-tool --db "$db" update-schema -d "$root/$dir/versioned"
+              done
+          env:
+            - name: SQL_PLUGIN
+              value: postgres12_pgx
+            - name: SQL_HOST
+              valueFrom:
+                configMapKeyRef: { name: temporal-db, key: host }
+            - name: SQL_PORT
+              value: "5432"
+            - name: SQL_USER
+              value: temporal
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: temporal-db, key: password }
+            - name: SQL_TLS
+              value: "true"
+            - name: SQL_TLS_DISABLE_HOST_VERIFICATION
+              value: "true"
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits: { memory: 256Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
