@@ -24,3 +24,13 @@ async def close_engine() -> None:
 def tenant_session(tenant_id: UUID) -> AbstractAsyncContextManager[AsyncSession]:
     """One transaction with ``app.tenant_id`` set, so row-level security applies."""
     return shared.session_scope(tenant_id)
+
+
+async def verify_rls(engine: AsyncEngine) -> None:
+    """Fail-closed startup check that RLS genuinely applies for the app role.
+
+    No-ops unless IGS_DB_APP_ROLE is configured (required in production by Settings); raises if the
+    role could bypass RLS or read a tenant table with no tenant set. See
+    ``igs_common.db.session.verify_rls_enforced``.
+    """
+    await shared.verify_rls_enforced(engine=engine)

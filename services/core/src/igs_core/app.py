@@ -50,6 +50,7 @@ def create_app(
             yield
             return
         engine = db.open_engine(settings.database_url)
+        await db.verify_rls(engine)  # fail closed at boot if RLS isn't actually enforced
         app.state.repos = Repositories(
             directory=SqlDirectory(engine),
             trips=SqlTrips(db.tenant_session),

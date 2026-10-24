@@ -1,13 +1,15 @@
 """The digest over a migrated + freshly seeded Postgres (`docker compose up -d db`).
 
-The seed dates are relative to today (igs_common.seed.anchor), so "now" is the real clock.
+The seed is pinned to FIXTURE_ANCHOR (conftest sets DEMO_ANCHOR), so its dates are literal. The
+digest's "now" must be anchored the same way, not the wall clock: otherwise, as real time drifts
+past the seeded expiry dates, the pending approvals silently expire and the story changes.
 """
 
 import asyncio
 import os
 from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager
-from datetime import UTC, datetime
+from datetime import UTC, datetime, time
 from pathlib import Path
 from uuid import UUID
 
@@ -29,6 +31,11 @@ from igs_common.digest import (
     template_summary,
 )
 from igs_common.seed import fixture_id, load
+from igs_common.seed.anchor import demo_anchor
+
+# The seed's "now": midday on the pinned anchor, so seeded commitments/approvals read as authored
+# regardless of the wall clock (see the module docstring).
+SEED_NOW = datetime.combine(demo_anchor(), time(12, 0), tzinfo=UTC)
 
 ADMIN_URL = os.environ.get("IGS_TEST_ADMIN_URL", "postgresql://igs:igs@localhost:5433/igs")
 TEST_DB = "igs_test_d7"
@@ -89,7 +96,7 @@ def _factory(engine: AsyncEngine):  # noqa: ANN202
 
 
 async def test_seeded_digest_tells_the_lakeshore_story(engine: AsyncEngine) -> None:
-    now = datetime.now(UTC)
+    now = SEED_NOW
     digest = await generate_digest(_factory(engine), tenant_id=TENANT, llm=None, now=now)
     facts = digest.facts
 
