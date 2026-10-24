@@ -149,6 +149,16 @@ class PgVectorStore:
     ) -> list[str]:
         if vector is None:
             return []
+        # Filtered-HNSW recall: the WHERE filter (tenant/payload/quarantine) is applied *after* the
+        # HNSW graph walk, so with the default ef_search (40) a selective filter can leave far fewer
+        # than :cand survivors — silently low recall. Raise ef_search for this transaction only
+        # (set_config is_local=true) so enough candidates survive the filter. Scaled to :cand and
+        # capped so a huge request can't blow up query time. Version-safe across pgvector ≥0.5;
+        # on pgvector ≥0.8, `hnsw.iterative_scan` is the cleaner follow-up.
+        ef = max(100, min(1000, int(params.get("cand", 0)) * 4))
+        await session.execute(
+            text("SELECT set_config('hnsw.ef_search', :ef, true)"), {"ef": str(ef)}
+        )
         result = await session.execute(
             text(
                 f"SELECT vector_object_id FROM document_chunks WHERE {base} "  # noqa: S608 - fragments are allowlisted by filters.to_sql; values are bound

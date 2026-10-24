@@ -119,6 +119,12 @@ class DocumentChunk(IdMixin, TimestampMixin, TenantMixin, Base):
         Index("uq_document_chunks_interaction_hash", "interaction_id", "content_hash", unique=True),
         Index("ix_document_chunks_account", "tenant_id", "account_id"),
         Index(
+            "ix_document_chunks_tenant_vobj",
+            "tenant_id",
+            "vector_object_id",
+            postgresql_where="vector_object_id IS NOT NULL",
+        ),
+        Index(
             "ix_document_chunks_quarantined",
             "tenant_id",
             postgresql_where="quarantined",
