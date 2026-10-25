@@ -20,7 +20,7 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-extend-exclude = ["spikes"]
+extend-exclude = ["spikes", "spike"]
 target-version = "py313"
 
 [tool.ruff.lint]
@@ -39,5 +39,5 @@ known-first-party = ["igs_common", "igs_core", "igs_worker"]
 
 [tool.pyright]
 include = ["packages/py-common", "services/core", "services/worker"]
-exclude = ["spikes", "**/.venv", "**/node_modules", "apps"]
+exclude = ["spikes", "spike", "**/.venv", "**/node_modules", "apps"]
 pythonVersion = "3.13"
