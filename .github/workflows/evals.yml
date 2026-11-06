@@ -68,26 +68,46 @@ jobs:
       IGS_LLM_MODELS: ${{ vars.IGS_LLM_MODELS }}
       EVALS_ALLOW_PAID: "1"
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      # Without the OPENAI_API_KEY secret the nightly run is skipped (with a warning) instead of
+      # failing every day; a manual or `evals:full` run still fails, because someone asked for it.
+      - name: Check the OpenAI key
+        id: key
+        run: |
+          if [ -n "$OPENAI_API_KEY" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+            echo "::warning::Full evals skipped: the repo has no OPENAI_API_KEY secret."
+            echo "Full evals skipped: add the \`OPENAI_API_KEY\` secret to run them nightly." >> "$GITHUB_STEP_SUMMARY"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Full evals need the OPENAI_API_KEY secret (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - if: steps.key.outputs.ok == 'true'
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           python-version: "3.13"
           enable-cache: true
           cache-dependency-glob: uv.lock
-      - run: uv sync --locked --all-packages
+      - if: steps.key.outputs.ok == 'true'
+        run: uv sync --locked --all-packages
       - name: Migrate and seed the demo tenant
+        if: steps.key.outputs.ok == 'true'
         run: |
           uv run alembic -c packages/py-common/alembic.ini upgrade head
           uv run python -m igs_common.seed
       - name: Full evals
+        if: steps.key.outputs.ok == 'true'
         env:
           EXTRA_ARGS: ${{ github.event.inputs.args }}
         run: |
           read -ra extra <<< "$EXTRA_ARGS"
           uv run python -m evals.run --out evals/results/ci "${extra[@]}"
-      - if: always()
+      - if: always() && steps.key.outputs.ok == 'true'
         run: cat evals/results/ci/summary.md >> "$GITHUB_STEP_SUMMARY" || true
-      - if: always()
+      - if: always() && steps.key.outputs.ok == 'true'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: evals-${{ github.run_id }}
